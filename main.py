@@ -19,11 +19,11 @@ import os
 app = Flask(__name__)
 
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/notify", methods=["POST"])
 def hello():
     print("hit - {}".format(request.data))
-    os.system("/home/azd/.bin/update-md")
-    return """{"text": "Success"}"""
+    return """Success\n"""
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5445)
+    app.run(host="127.0.0.1", port=5445)
+    app.run(host="127.0.0.1", port=5445)

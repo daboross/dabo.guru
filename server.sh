@@ -1,5 +1,5 @@
 #!/bin/bash
-#  mc - Minecraft Server Script
+#  server - management script
 #
 # ### License ###
 #
@@ -19,7 +19,7 @@
 
 ### Configuration ###
 
-declare -r NAME="gitmd-data"
+declare -r NAME="python-web"
 
 ### Script Variables ###
 
@@ -54,8 +54,7 @@ get_log() {
 # Logs something to the log file
 # $@ - Lines to log
 log() {
-    echo "$@"
-    echo "$(date +'%Y/%m/%d %H:%M') [${1}] ${@:2}" >> "$(get_log)"
+    echo "$(date +'%Y/%m/%d %H:%M') [${1}] ${2}" >> "$(get_log)"
 }
 
 # Tests if the server is running
@@ -151,7 +150,7 @@ start_server() {
 
 # Internally used start function
 internal_start() {
-    cd "$HOME/gitmd/"
+    cd "$HOME/$NAME/"
     local -r SERVER_PID="$$"
     echo "$SERVER_PID" > "$PID_FILE"
     log "internal_start" "Starting with pid $SERVER_PID"
