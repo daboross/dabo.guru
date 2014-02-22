@@ -14,15 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from flask import Flask, request
-import os
+from pushbullet import PushBullet
 
+with open('myfile.txt', 'r', encoding="UTF-8") as f:
+    global api_key, device
+    api_key = f.readline()
+    device = f.readline()
+push = PushBullet(api_key)
 app = Flask(__name__)
-
-
 @app.route("/notify", methods=["POST"])
 def hello():
-    print("hit - {}".format(request.data))
-    return """Success\n"""
+    push.push_note(device, "Web notice", request.data)
+    return """200\n"""
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5445)
