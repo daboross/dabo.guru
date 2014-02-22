@@ -67,6 +67,10 @@ class PushBullet():
         if postdata:
             postdata = json.dumps(postdata)
             postdata = postdata.encode('utf-8')
+        print("Request:")
+        print(request.headers)
+        print("PostData:")
+        print(postdata)
         response = urlopen(request, postdata)
         data = response.read()
         data = data.decode("utf-8")
@@ -95,25 +99,24 @@ class PushBullet():
 
     def push_note(self, device, title, body):
         data = {'type': 'note',
-                'device_id': device,
+                'device_iden': device,
                 'title': title,
                 'body': body}
         return self._request(HOST + "/pushes", data)
 
     def push_address(self, device, name, address):
         data = {'type': 'address',
-                'device_id': device,
+                'device_iden': device,
                 'name': name,
                 'address': address}
         return self._request(HOST + "/pushes", data)
 
     def push_list(self, device, title, items):
         data = {'type': 'list',
-                'device_id': device,
+                'device_iden': device,
                 'title': title,
                 'items': items}
         return self._request(HOST + "/pushes", data)
-
 
     def push_link(self, device, title, url):
         data = {'type': 'link',

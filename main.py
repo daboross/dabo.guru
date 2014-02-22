@@ -22,13 +22,10 @@ from pushbullet import PushBullet
 
 with open('api-key', 'r', encoding="UTF-8") as f:
     global api_key, device
-    api_key = f.readline()
-    device = f.readline()
+    api_key = f.readline().strip()
+    device = f.readline().strip()
 push = PushBullet(api_key)
 app = Flask(__name__)
-
-print("api_key = {}, device = {}".format(api_key, device))
-push.push_note(device, "Notice", "Hello")
 
 @app.route("/notify", methods=["POST"])
 def hello():
