@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# Adapted version of pyPushBullet (by Azelphur?)
+# Original repository: https://github.com/Azelphur/pyPushBullet
+
 from urllib.request import Request, urlopen
 from base64 import b64encode
 import json
@@ -25,23 +29,23 @@ def _encode_multipart_formdata(fields, files):
 
     bounadry_constant = '----------bound@ry_$'
     crlf_constant = '\r\n'
-    L = []
-    for key, value in fields.iteritems():
-        L.append('--' + bounadry_constant)
-        L.append('Content-Disposition: form-data; name="%s"' % (key))
-        L.append('')
-        L.append(str(value))
+    data_list = []
+    for key, value in fields.items():
+        data_list.append('--' + bounadry_constant)
+        data_list.append('Content-Disposition: form-data; name="%s"' % (key))
+        data_list.append('')
+        data_list.append(str(value))
 
     for (key, filename, value) in files:
-        L.append('--' + bounadry_constant)
-        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
-        L.append('Content-Type: %s' % (guess_type(filename)))
-        L.append('')
-        L.append(value)
+        data_list.append('--' + bounadry_constant)
+        data_list.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+        data_list.append('Content-Type: %s' % (guess_type(filename)))
+        data_list.append('')
+        data_list.append(value)
 
-    L.append('--' + bounadry_constant + '--')
-    L.append('')
-    body = crlf_constant.join(L)
+    data_list.append('--' + bounadry_constant + '--')
+    data_list.append('')
+    body = crlf_constant.join(data_list)
     content_type = 'multipart/form-data; boundary=%s' % bounadry_constant
     return content_type, body
 

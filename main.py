@@ -13,19 +13,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import traceback
+
 from flask import Flask, request
+
 from pushbullet import PushBullet
 
-with open('myfile.txt', 'r', encoding="UTF-8") as f:
+
+with open('api-key', 'r', encoding="UTF-8") as f:
     global api_key, device
     api_key = f.readline()
     device = f.readline()
 push = PushBullet(api_key)
 app = Flask(__name__)
+
+print("api_key = {}, device = {}".format(api_key, device))
+push.push_note(device, "Notice", "Hello")
+
 @app.route("/notify", methods=["POST"])
 def hello():
-    push.push_note(device, "Web notice", request.data)
-    return """200\n"""
+    try:
+        print("Web notice: " + request.data.decode())
+        push.push_note(device, "Web Notice", request.data.decode())
+        return """Success\n"""
+    except Exception:
+        traceback.print_exc()
+        return """Failure\n"""
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5445)
