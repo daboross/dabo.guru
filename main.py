@@ -27,17 +27,17 @@ with open('api-key', 'r', encoding="UTF-8") as f:
 push = PushBullet(api_key)
 app = Flask(__name__)
 
+# noinspection PyBroadException
 @app.route("/notify", methods=["POST"])
 def hello():
     try:
         print("Web notice: " + request.data.decode())
         push.push_note(device, "Web Notice", request.data.decode())
         return """Success\n"""
-    except Exception:
+    except:
         traceback.print_exc()
         return """Failure\n"""
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5445)
     app.run(host="127.0.0.1", port=5445)
