@@ -22,31 +22,26 @@ from flask import Flask, request
 
 from pushbullet import PushBullet
 
+# load config
+if os.path.isfile("config.json"):
+    with open("config.json") as config_file:
+        config = json.load(config_file)
+else:
+    print("Config not found! Please copy config.default.json to config.json")
+    sys.exit()
 
-def load_config():
-    if os.path.isfile("config.json"):
-        with open("config.json") as config_file:
-            config = json.load(config_file)
-    else:
-        print("Config not found! Please copy config.default.json to config.json")
-        sys.exit()
-    return config
+# get api_key and device
+api_key = config["pushbullet"]["api-key"]
+device = config["pushbullet"]["device"]
 
-
-def setup():
-    config = load_config()
-    global api_key, device
-    api_key = config["pushbullet"]["api-key"]
-    device = config["pushbullet"]["device"]
-
-
+# create app
 push = PushBullet(api_key)
 app = Flask(__name__)
 
 
+# noinspection PyBroadException
 @app.route("/notify", methods=["POST"])
-def hello():
-    # noinspection PyBroadException
+def notify():
     try:
         print("Web notice: " + request.data.decode())
         push.push_note(device, "Web Notice", request.data.decode())
@@ -57,5 +52,4 @@ def hello():
 
 
 if __name__ == "__main__":
-    setup()
     app.run(host="127.0.0.1", port=5445)
