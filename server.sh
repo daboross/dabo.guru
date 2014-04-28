@@ -72,7 +72,7 @@ server_script() {
             log "server_script" "Server running"
         else
             log "server_script" "Restarting server"
-            restart_server
+            restart
         fi
     else
         log "server_script" "Script disabled"

@@ -16,14 +16,14 @@
 import traceback
 
 from flask import Flask, request
-
 from pushbullet import PushBullet
 
-
 with open('api-key', 'r', encoding="UTF-8") as f:
-    global api_key, device
+    global api_key
+    global device
     api_key = f.readline().strip()
     device = f.readline().strip()
+
 push = PushBullet(api_key)
 app = Flask(__name__)
 
