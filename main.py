@@ -22,7 +22,6 @@ from flask import Flask, request
 
 from pushbullet import PushBullet
 
-# load config
 if os.path.isfile("config.json"):
     with open("config.json") as config_file:
         config = json.load(config_file)
