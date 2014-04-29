@@ -79,7 +79,7 @@ def notify_respond():
     return """Success\n"""
 
 
-@app.route("/oauth/", methods=["GET"])
+@app.route("/oauth", methods=["GET"])
 def oauth_respond():
     if "oauth_token" in request.args and "oauth_verifier" in request.args:
         data = base64.b64encode(json.dumps(request.args).encode()).decode()
