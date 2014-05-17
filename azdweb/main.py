@@ -19,48 +19,23 @@ import logging
 import os
 import traceback
 import sys
+import logging.config
 
 from flask import Flask, request, render_template
 
 from pushbullet import PushBullet
 
 
-def setup_logging():
-    """
-    Initializes the root logger
-    :rtype: logging.Logger
-    """
-    # create logger
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
-    # create file handler
-    file_handler = logging.FileHandler("debug.log")
-    file_handler.setLevel(logging.DEBUG)
-
-    # create console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO)
-
-    # set formatting
-    file_handler.setFormatter(logging.Formatter("{asctime}[{levelname}] {message}", "[%Y-%m-%d][%H:%M:%S]", style="{"))
-    console_handler.setFormatter(logging.Formatter("[{asctime}] {message}", "%H:%M:%S", style="{"))
-
-    # add the Handlers to the logger
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
-
 def get_config():
-    if os.path.isfile("config.json"):
-        with open("config.json") as config_file:
+    config_path = os.path.abspath("config.json")
+    if os.path.isfile(config_path):
+        with open(config_path) as config_file:
             return json.load(config_file)
     else:
-        print("Config not found! Please copy config.default.json to config.json")
+        logging.warning("Config not found! Please copy config.default.json to config.json")
         sys.exit()
 
 
-setup_logging()
 config = get_config()
 
 # get api_key and device
@@ -69,12 +44,12 @@ device = config["pushbullet"]["device"]
 
 # create app
 push = PushBullet(api_key)
-app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
+app = Flask(__name__, template_folder=os.path.abspath('templates'))
 
 
 @app.route("/notify", methods=["POST"])
 def notify_respond():
-    print("Web notice: " + request.data.decode())
+    logging.info("Web notice: " + request.data.decode())
     push.push_note(device, "Web Notice", request.data.decode())
     return """Success\n"""
 
@@ -99,7 +74,3 @@ def internal_error(err):
     except Exception:
         logging.exception("Exception sending exception note!")
     return render_template("500.html"), 500
-
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5445)
