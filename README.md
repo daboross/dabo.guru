@@ -9,4 +9,4 @@ If you GET to /oauth/?key=value, it'll give you a base64 encoded string containi
 
 Try it out at http://dabo.guru/py/oauth/?key=value
 
-Or post to http://dabo.guru/py/notify, and I'll get a notification on my phone.
+Or POST to http://dabo.guru/py/notify, and I'll get a notification on my phone. There's an example of using this in javascript at http://dabo.guru/
