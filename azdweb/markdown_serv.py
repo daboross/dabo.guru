@@ -30,13 +30,16 @@ def load_cached(filename):
     return contents
 
 
-@app.route("/md", defaults={"page": "index"})
-@app.route("/md/<path:page>")
+@app.route("/md/", defaults={"page": "index"})
+@app.route("/md/<path:page>/")
 def serve_markdown(page):
     if "." in page:
         return render_template("markdown-404.html", page=page)
+    if not page:
+        page = "index"
     if page.endswith("/"):
         page += "index"
+
     filename = os.path.join(root_path, "{}.md".format(page))
     if not os.path.exists(filename):
         return render_template("markdown-404.html", page=page)
@@ -48,7 +51,9 @@ def serve_markdown(page):
     return render_template("markdown.html", title=page, content=load_cached(filename), sidebar=sidebar_content)
 
 
-@app.route("/sw", defaults={"page": "index"})
-@app.route("/sw/<path:page>")
+@app.route("/sw/", defaults={"page": "index"})
+@app.route("/sw/<path:page>/")
 def skywars_alias(page):
+    if not page:
+        page = "index"
     return serve_markdown("skywars/{}".format(page))
