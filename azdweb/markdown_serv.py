@@ -1,6 +1,7 @@
+import codecs
 import os
 
-from flask import request, render_template
+from flask import render_template
 
 from azdweb import app
 from azdweb.util import gh_markdown
@@ -12,7 +13,7 @@ cache = {}
 
 
 def load(filename):
-    with open(filename) as file:
+    with codecs.open(filename, encoding="utf-8") as file:
         return gh_markdown.markdown(file.read())
 
 
@@ -29,9 +30,25 @@ def load_cached(filename):
     return contents
 
 
-@app.route("/md/<page>")
+@app.route("/md", defaults={"page": "index"})
+@app.route("/md/<path:page>")
 def serve_markdown(page):
+    if "." in page:
+        return render_template("markdown-404.html", page=page)
+    if page.endswith("/"):
+        page += "index"
     filename = os.path.join(root_path, "{}.md".format(page))
     if not os.path.exists(filename):
         return render_template("markdown-404.html", page=page)
-    return render_template("markdown.html", page=page, content=load_cached(filename))
+    sidebar = os.path.join(os.path.dirname(filename), "sidebar.md")
+    if os.path.exists(sidebar):
+        sidebar_content = load_cached(sidebar)
+    else:
+        sidebar_content = ""
+    return render_template("markdown.html", title=page, content=load_cached(filename), sidebar=sidebar_content)
+
+
+@app.route("/sw", defaults={"page": "index"})
+@app.route("/sw/<path:page>")
+def skywars_alias(page):
+    return serve_markdown("skywars/{}".format(page))
