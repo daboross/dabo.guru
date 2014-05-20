@@ -1,14 +1,13 @@
 # Github-flavored markdown parsing
 # Thanks to http://blog.freedomsponsors.org/markdown_formatting/
 import misaka
-from misaka import HtmlRenderer, SmartyPants
 
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 
 
-class HighlighterRenderer(HtmlRenderer, SmartyPants):
+class HighlighterRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
     def block_code(self, text, lang):
         s = ''
         if not lang:
