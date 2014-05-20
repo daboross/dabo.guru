@@ -18,6 +18,6 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import azdweb.main
+import azdweb
 
-application = azdweb.main.app
+application = azdweb.app

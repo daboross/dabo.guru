@@ -1,0 +1,5 @@
+{% extends "layout.html" %}
+{% block title %}{% if title %}{{ title }}{% else %}Markdown{% endif %}{% endblock %}
+{% block body %}
+    {{ content|safe }}
+{% endblock %}

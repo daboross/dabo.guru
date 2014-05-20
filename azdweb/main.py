@@ -21,9 +21,10 @@ import traceback
 import sys
 import logging.config
 
-from flask import Flask, request, render_template
+from flask import request, render_template
 
 from pushbullet import PushBullet
+from azdweb import app
 
 
 def get_config():
@@ -44,7 +45,6 @@ device = config["pushbullet"]["device"]
 
 # create app
 push = PushBullet(api_key)
-app = Flask(__name__, template_folder=os.path.abspath('templates'))
 
 
 @app.route("/notify", methods=["POST"])

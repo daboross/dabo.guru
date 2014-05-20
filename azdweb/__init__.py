@@ -16,7 +16,9 @@
 import logging.config
 import os
 
-__all__ = ["appmain"]
+from flask import Flask
+
+__all__ = ["app", "main", "markdown_serv"]
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 logging.config.dictConfig({
@@ -50,3 +52,7 @@ logging.config.dictConfig({
         "handlers": ["console", "file"]
     }
 })
+
+app = Flask(__name__, template_folder=os.path.abspath('templates'))
+
+from azdweb import main, markdown_serv
