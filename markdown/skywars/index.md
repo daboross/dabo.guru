@@ -1,5 +1,4 @@
-SkyWars
-=======
+![SkyWars](http://dabo.guru/logo/SkyWars.png)
 
 ### Features
 * Automatically create new arenas every time enough people join the queue.
