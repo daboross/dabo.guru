@@ -42,11 +42,11 @@ def update_repo(repo_config):
 @app.route("/webhook", methods=["POST"])
 def webhook():
     if not "token" in request.args:
-        return render_template("403.html"), 403
+        return render_template("invalid-api-key-403.html"), 403
     api_key = request.args["token"]
 
     if api_key in config["github"]:
         threadpool.submit(update_repo, config["github"][api_key])
-        return render_template("200.html")
+        return render_template("generic-success.html")
 
-    return render_template("403.html"), 403
+    return render_template("invalid-api-key-403.html"), 403

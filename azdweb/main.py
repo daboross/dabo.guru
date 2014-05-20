@@ -48,13 +48,3 @@ def oauth_respond():
         rows = data.count("\n") + 1
         return render_template("oauth-error.html", data=data, rows=rows)
 
-
-@app.errorhandler(Exception)
-def internal_error(err):
-    logging.exception("Exception!")
-    try:
-        # since we have pushbullet, we can do exception notices :D
-        push.push_note(device, "Python Exception", traceback.format_exc())
-    except Exception:
-        logging.exception("Exception sending exception note!")
-    return render_template("500.html"), 500
