@@ -13,12 +13,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json
 import logging.config
 import os
+import sys
 
 from flask import Flask
 
-__all__ = ["app", "main", "markdown_serv"]
+__all__ = ["app", "config"]
 
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 logging.config.dictConfig({
@@ -53,6 +55,19 @@ logging.config.dictConfig({
     }
 })
 
+
+def get_config():
+    config_path = os.path.abspath("config.json")
+    if os.path.isfile(config_path):
+        with open(config_path) as config_file:
+            return json.load(config_file)
+    else:
+        logging.warning("Config not found! Please copy config.default.json to config.json")
+        sys.exit()
+
+
+config = get_config()
+
 app = Flask(__name__, template_folder=os.path.abspath('templates'))
 
-from azdweb import main, markdown_serv
+from azdweb import main, markdown_serv, github_pull

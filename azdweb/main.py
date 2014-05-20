@@ -16,30 +16,14 @@
 import base64
 import json
 import logging
-import os
 import traceback
-import sys
 import logging.config
 
 from flask import request, render_template
 
 from pushbullet import PushBullet
-from azdweb import app
+from azdweb import app, config
 
-
-def get_config():
-    config_path = os.path.abspath("config.json")
-    if os.path.isfile(config_path):
-        with open(config_path) as config_file:
-            return json.load(config_file)
-    else:
-        logging.warning("Config not found! Please copy config.default.json to config.json")
-        sys.exit()
-
-
-config = get_config()
-
-# get api_key and device
 api_key = config["pushbullet"]["api-key"]
 device = config["pushbullet"]["device"]
 
