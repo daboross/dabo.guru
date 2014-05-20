@@ -70,4 +70,4 @@ config = get_config()
 
 app = Flask(__name__, template_folder=os.path.abspath('templates'))
 
-from azdweb import main, markdown_serv, github_pull
+from azdweb import main, markdown_serv, github_pull, minifier
