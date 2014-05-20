@@ -1,3 +1,5 @@
+# Github-flavored markdown parsing
+# Thanks to http://blog.freedomsponsors.org/markdown_formatting/
 import misaka
 from misaka import HtmlRenderer, SmartyPants
 
@@ -14,7 +16,8 @@ class HighlighterRenderer(HtmlRenderer, SmartyPants):
         try:
             lexer = get_lexer_by_name(lang, stripall=True)
         except:
-            s += '<div class="highlight"><span class="err">Error: language "%s" is not supported</span></div>' % lang
+            s += '<div class="highlight"><span class="err">Error: language "{}" is not supported</span></div>'.format(
+                lang)
             lexer = get_lexer_by_name('text', stripall=True)
         formatter = HtmlFormatter()
         s += highlight(text, lexer, formatter)
