@@ -16,8 +16,10 @@ A few guidelines:
 * Include your server version and your SkyWars version. Version numbers, never say 'latest'.
 * Include a detailed description of what is happening.
   Search your server.log file for errors, and include those.
-* For everything you take out of the server.log file, please put it into a [gist](http://gist.github.com) and copy the link here. Also include 10 lines above and below the error/output you are capturing.
-* Include the output of the **/sw cfgdebug -p** comman in the ticket. This gives information on your configuration. If you are using version 1.3.2 or above, please use **/sw report** instead of **/sw cfgdebug -p**
+* For everything you take out of the server.log file, please put it into a [gist](http://gist.github.com) and copy the
+  link here. Also include 10 lines above and below the error/output you are capturing.
+* Include the output of the **/sw report** comman in the ticket. This gives information on your configuration.
+  If you are using version 1.3.2 or below, please use **/sw cfgdebug -p** instead of **/sw report**.
 
 ## Actually submitting
 
