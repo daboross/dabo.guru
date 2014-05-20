@@ -4,7 +4,7 @@ Submitting a ticket
 ## Feature requests
 
 A few guidelines:
-* Join Sings and a lobby!
+
 * Include a detailed description of the feature requested.
 * Include why the feature would be a good thing to have.
 * Do **not** group multiple feature requests together.
