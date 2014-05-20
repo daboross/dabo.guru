@@ -6,7 +6,7 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+            <div class="col-md-8 col-md-offset-1 col-xs-12 col-xs-offset-0">
                 <div class="list-group">
                     <div class="list-group-item">
                         {{ content|safe }}
@@ -19,7 +19,7 @@
                 </div>
             </div>
             {% if sidebar %}
-                <div id="sidebar" class="col-md-2 col-md-offset-9 visible-md visible-lg">
+                <div id="sidebar" class="col-md-3 col-md-offset-8 visible-md visible-lg">
                     <div class="list-group">
                         <div class="list-group-item">
                             {{ sidebar|safe }}
