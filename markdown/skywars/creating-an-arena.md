@@ -2,9 +2,11 @@ Setting up a new arena
 ======================
 
 1. Use **/sws start <name you want>** to start setting up an arena. Replace **<name you want>** with a name that you think would fit your new arena.
+
    Generally this should be all lower-case and contain only 0-9, a-z and -.
 
 2. Stand at one of the corners of the arena, so that your head is at the very edge of the arena on 3 sides.
+
    At that position, use **/sws setpos1**. This probably will require flying, as you need to be outside of the arena.
 
 3. Stand at the corner *opposite* the corner you just stood at. Then use **/sws setpos2**
