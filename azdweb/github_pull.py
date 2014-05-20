@@ -31,9 +31,12 @@ def update_repo(repo_config):
 
     markdown_source = os.path.join(dirname, repo_config["markdown_dir"])
     markdown_dest = os.path.join(markdown_root, name)
-    logging.debug("Copying {} to {}".format(markdown_source, markdown_dest))
-    shutil.rmtree(markdown_dest)
-    shutil.copytree(markdown_source, markdown_dest)
+    logging.debug("Copying: {}".format(markdown_source, markdown_dest))
+    try:
+        shutil.rmtree(markdown_dest)
+        logging.debug("Result: {}".format(shutil.copytree(markdown_source, markdown_dest)))
+    except Exception:
+        logging.exception("Ah, exception here.")
 
 
 @app.route("/webhook", methods=["POST"])
