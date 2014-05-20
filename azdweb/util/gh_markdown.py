@@ -27,9 +27,12 @@ class HighlighterRenderer(HtmlRenderer, SmartyPants):
         return '<table class="table">\n' + header + '\n' + body + '\n</table>'
 
 # And use the renderer
-renderer = HighlighterRenderer(flags=misaka.HTML_ESCAPE | misaka.HTML_HARD_WRAP | misaka.HTML_SAFELINK)
-md = misaka.Markdown(renderer,
-                     extensions=misaka.EXT_FENCED_CODE | misaka.EXT_NO_INTRA_EMPHASIS | misaka.EXT_TABLES | misaka.EXT_AUTOLINK | misaka.EXT_SPACE_HEADERS | misaka.EXT_STRIKETHROUGH | misaka.EXT_SUPERSCRIPT)
+renderer = HighlighterRenderer(flags=misaka.HTML_ESCAPE | misaka.HTML_SAFELINK)
+md = misaka.Markdown(
+    renderer, extensions=
+    misaka.EXT_FENCED_CODE | misaka.EXT_NO_INTRA_EMPHASIS | misaka.EXT_TABLES | misaka.EXT_AUTOLINK |
+    misaka.EXT_SPACE_HEADERS | misaka.EXT_STRIKETHROUGH | misaka.EXT_SUPERSCRIPT
+)
 
 
 def markdown(text):
