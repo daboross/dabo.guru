@@ -1,5 +1,32 @@
-{% extends "layout.html" %}
-{% block title %}{% if title %}{{ title }}{% else %}Markdown{% endif %}{% endblock %}
+{% extends "bootstrap-layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block links %}
+    <link rel="stylesheet" type="text/css" href="/css/sidebar.css">
+{% endblock %}
 {% block body %}
-    {{ content|safe }}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+                <div class="list-group">
+                    <div class="list-group-item">
+                        {{ content|safe }}
+                    </div>
+                    {% if sidebar %}
+                        <div class="list-group-item visible-xs visible-sm">
+                            {{ sidebar|safe }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% if sidebar %}
+                <div id="sidebar" class="col-md-2 col-md-offset-9 visible-md visible-lg">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            {{ sidebar|safe }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
