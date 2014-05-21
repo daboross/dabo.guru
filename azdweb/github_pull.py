@@ -31,9 +31,13 @@ def update_repo(repo_config):
 
     markdown_source = os.path.join(dirname, repo_config["markdown_dir"])
     markdown_dest = os.path.join(markdown_root, name)
-    logging.debug("Copying: {}".format(markdown_source, markdown_dest))
+    logging.debug("Copying: {} -> {}".format(markdown_source, markdown_dest))
+
     try:
-        shutil.rmtree(markdown_dest)
+        try:
+            shutil.rmtree(markdown_dest)
+        except FileNotFoundError:
+            pass  # no need to delete a file that doesn't exist
         logging.debug("Result: {}".format(shutil.copytree(markdown_source, markdown_dest)))
     except Exception:
         logging.exception("Ah, exception here.")
