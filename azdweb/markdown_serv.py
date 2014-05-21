@@ -1,5 +1,7 @@
 import codecs
+import logging
 import os
+import re
 
 from flask import render_template
 
@@ -8,26 +10,38 @@ from azdweb.util import gh_markdown
 
 root_path = os.path.abspath("markdown")
 
-# {filename: (mtime, contents)}
+# {filename: (mtime, title, contents)}
 cache = {}
+
+title_regex = re.compile("^([^\n]+)\n[=-]+|!\\[([^\\]]+)\\]")
 
 
 def load(filename):
     with codecs.open(filename, encoding="utf-8") as file:
-        return gh_markdown.markdown(file.read())
+        raw_contents = file.read()
+
+    contents = gh_markdown.markdown(raw_contents)
+    match = title_regex.match(raw_contents)
+    if match:
+        title = match.group(1) or match.group(2)
+    else:
+        logging.debug("Didn't match title for {}".format(raw_contents))
+        title = None
+    return title, contents
 
 
 def load_cached(filename):
     mtime = os.path.getmtime(filename)
     if filename in cache:
-        old_mtime, contents = cache[filename]
+        old_mtime, title, contents = cache[filename]
         if mtime != old_mtime:
-            contents = load(filename)
-            cache[filename] = (mtime, contents)
+            title, contents = load(filename)
+            cache[filename] = (mtime, title, contents)
     else:
-        contents = load(filename)
-        cache[filename] = (mtime, contents)
-    return contents
+        title, contents = load(filename)
+        cache[filename] = (mtime, title, contents)
+
+    return title, contents
 
 
 @app.route("/md/", defaults={"page": "index"})
@@ -45,10 +59,13 @@ def serve_markdown(page):
         return render_template("markdown-404.html", page=page)
     sidebar = os.path.join(os.path.dirname(filename), "sidebar.md")
     if os.path.exists(sidebar):
-        sidebar_content = load_cached(sidebar)
+        ignored_title, sidebar_content = load_cached(sidebar)
     else:
         sidebar_content = ""
-    return render_template("markdown.html", title=page, content=load_cached(filename), sidebar=sidebar_content)
+    title, content = load_cached(filename)
+    if title is None:
+        title = page
+    return render_template("markdown.html", title=title, content=content, sidebar=sidebar_content)
 
 
 @app.route("/sw/", defaults={"page": "index"})
