@@ -15,11 +15,9 @@ def internal_error(err):
         push.push_note(device, "Python Exception", traceback.format_exc())
     except Exception:
         logging.exception("Exception sending exception note.")
-    try:
-        return render_template("500.html"), 500
-    except Exception:
-        logging.exception("Exception rendering 500 page.")
-        return render_template("simple-500.html"), 500
+
+    return render_template("500.html"), 500
+
 
 @app.errorhandler(404)
 def page_not_found(err):

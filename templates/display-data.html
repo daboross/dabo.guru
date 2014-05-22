@@ -1,0 +1,6 @@
+{% extends "single-item-layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <h4>{{ desc }}</h4>
+    <textarea class="form-control" style="resize: none;" rows="{{ rows }}" contenteditable="false">{{ data }}</textarea>
+{% endblock %}
