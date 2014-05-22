@@ -45,7 +45,7 @@ def load_cached(filename):
 
 
 @app.route("/md/", defaults={"page": "index"})
-@app.route("/md/<path:page>/")
+@app.route("/md/<path:page>")
 def serve_markdown(page):
     if "." in page:
         return render_template("markdown-404.html", page=page)
@@ -69,8 +69,16 @@ def serve_markdown(page):
 
 
 @app.route("/sw/", defaults={"page": "index"})
-@app.route("/sw/<path:page>/")
+@app.route("/sw/<path:page>")
 def skywars_alias(page):
     if not page:
         page = "index"
     return serve_markdown("skywars/{}".format(page))
+
+
+@app.route("/rt/", defaults={"page": "index"})
+@app.route("/rt/<path:page>")
+def robot_tables_alias(page):
+    if not page:
+        page = "index"
+    return serve_markdown("robot-tables/{}".format(page))
