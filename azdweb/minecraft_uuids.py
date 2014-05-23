@@ -1,69 +1,80 @@
 import json
-import urllib.error
-import urllib.parse
+from builtins import list
+import logging
+
+from flask.globals import request
 
 import requests
 
 from azdweb import app
 
-base_name_url = "https://account.minecraft.net/buy/frame/checkName/{}"
-paid_url = "http://www.minecraft.net/haspaid.jsp"
+user_api_url = "https://sessionserver.mojang.com/session/minecraft/profile/"
+uuid_api_url = "https://api.mojang.com/profiles/minecraft/"
 
 
-class UserNotFound(Exception):
-    pass
+class MojangError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
 
 
-@app.route("/user-uuid/<username>")
-def username_uuid(username):
+@app.route("/name-uuid/", methods=["POST"])
+def name_to_uuid_page():
+    data = request.get_json()
+    if data is None:
+        return "Invalid request", 406
+    if len(data) >= 100:
+        return "Too many usernames", 406
+    if not isinstance(data, list):
+        return "Not a list", 406
+    data = [str(user) for user in data]
     try:
-        return json.dumps(get_profile(username), indent=1)
-    except UserNotFound:
-        return "User not found", 500
+        return json.dumps(retrieve_uuids(data))
+    except MojangError as e:
+        return e.message, 500
 
 
-@app.route("/uuid-user/<uuid>")
-def uuid_username(uuid):
-    try:
-        return json.dumps(get_profile(uuid), indent=1)
-    except UserNotFound:
-        return "User not found", 500
+@app.route("/uuid-name/", methods=["POST"])
+def uuid_to_name_page():
+    data = request.get_json()
+    if data is None:
+        return "Invalid request", 406
+    if len(data) >= 100:
+        return "Too many uuids", 406
+    if not isinstance(data, list):
+        return "Not a list", 406
+    return json.dumps(retrieve_usernames(data))
 
 
-def is_taken(name):
-    quoted_name = urllib.parse.quote_plus(name)
-    response = requests.request("GET", base_name_url.format(quoted_name))
-
-    if "OK" in response.text:
-        return "free"
-    elif "TAKEN" in response.text:
-        return "taken"
-    else:
-        return "invalid"
+def id_to_uuid(uuid):
+    return uuid[0:8] + "-" + uuid[8:12] + "-" + uuid[12:16] + "-" + uuid[16:20] + "-" + uuid[20:32]
 
 
-def get_profile(username):
-    data = request_profile(username)
-    if len(data["profiles"]) < 1:
-        raise UserNotFound
-    user = data["profiles"][0]
-    profile = {
-        "name": user["name"],
-        "id": user["id"],
-        "legacy": user.get("legacy", False),
-        "premium": is_paid(username)
-    }
-    return profile
-
-
-def is_paid(username):
-    return "true" in requests.get(paid_url, params={"user": username}).text
-
-
-def request_profile(username):
-    request = requests.post(
-        "https://api.mojang.com/profiles/page/1",
-        json.dumps({"name": username, "agent": "minecraft"}).encode(),
+def retrieve_uuids(names):
+    logging.info("Names: {}".format(names))
+    response = requests.post(
+        uuid_api_url,
+        json.dumps(names).encode(),
         headers={"Content-Type": "application/json"}
     )
-    return request.json()
+    data = response.json()
+    logging.info("Data: {}".format(data))
+    if "error" in data:
+        raise MojangError(data["error"])
+    uuids = {}
+    for profile in data:
+        uuids[profile["name"]] = id_to_uuid(profile["id"])
+
+    return uuids
+
+
+def retrieve_usernames(uuids):
+    names = {}
+    for uuid in uuids:
+        response = requests.get(user_api_url + uuid.replace("-", ""))
+        data = response.json()
+        if "name" in data:
+            names[uuid] = data["name"]
+    return names
