@@ -4,6 +4,7 @@ import os
 import re
 
 from flask import render_template
+from flask.wrappers import Response
 
 from azdweb import app
 from azdweb.util import gh_markdown
@@ -48,7 +49,7 @@ def load_cached(filename):
 @app.route("/md/<path:page>")
 def serve_markdown(page):
     if "." in page:
-        return render_template("markdown-404.html", page=page)
+        return render_template("markdown-404.html", page=page), 404
     if not page:
         page = "index"
     if page.endswith("/"):
@@ -56,7 +57,7 @@ def serve_markdown(page):
 
     filename = os.path.join(root_path, "{}.md".format(page))
     if not os.path.exists(filename):
-        return render_template("markdown-404.html", page=page)
+        return render_template("markdown-404.html", page=page), 404
     sidebar = os.path.join(os.path.dirname(filename), "sidebar.md")
     if os.path.exists(sidebar):
         ignored_title, sidebar_content = load_cached(sidebar)
