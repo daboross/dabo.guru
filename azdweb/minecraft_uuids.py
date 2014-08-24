@@ -3,7 +3,6 @@ from builtins import list
 import logging
 
 from flask.globals import request
-
 import requests
 
 from azdweb import app

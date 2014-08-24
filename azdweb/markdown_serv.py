@@ -4,7 +4,6 @@ import os
 import re
 
 from flask import render_template
-from flask.wrappers import Response
 
 from azdweb import app
 from azdweb.util import gh_markdown

@@ -4,7 +4,7 @@
         "device": "xxx"
     },
     "github": {
-        "api-key-here":{
+        "api-key-here": {
             "url": "https://github.com/SkyWars/SkyWars.git",
             "name": "skywars",
             "markdown_dir": "docs/skywars/"
