@@ -19,6 +19,7 @@ import os
 import sys
 
 from flask import Flask
+from pushbullet import PushBullet
 
 __all__ = ["app", "config"]
 
@@ -70,4 +71,10 @@ config = get_config()
 
 app = Flask(__name__)
 
-from content import main, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game
+api_key = config["pushbullet"]["api-key"]
+device = config["pushbullet"]["device"]
+
+# create app
+push = PushBullet(api_key)
+
+from content import web_api_pages, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game

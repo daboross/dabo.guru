@@ -3,8 +3,7 @@ import traceback
 
 from flask import render_template, request
 
-from content import app
-from content.main import push, device
+from content import app, push, device
 
 
 @app.errorhandler(Exception)
