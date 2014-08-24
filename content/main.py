@@ -21,7 +21,7 @@ import logging.config
 from flask import request, render_template
 
 from pushbullet import PushBullet
-from azdweb import app, config
+from content import app, config
 
 api_key = config["pushbullet"]["api-key"]
 device = config["pushbullet"]["device"]

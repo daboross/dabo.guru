@@ -3,8 +3,8 @@ import traceback
 
 from flask import render_template, request
 
-from azdweb import app
-from azdweb.main import push, device
+from content import app
+from content.main import push, device
 
 
 @app.errorhandler(Exception)

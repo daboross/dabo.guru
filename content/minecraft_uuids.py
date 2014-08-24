@@ -5,7 +5,7 @@ import logging
 from flask.globals import request
 import requests
 
-from azdweb import app
+from content import app
 
 user_api_url = "https://sessionserver.mojang.com/session/minecraft/profile/"
 uuid_api_url = "https://api.mojang.com/profiles/minecraft/"

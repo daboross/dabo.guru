@@ -1,6 +1,6 @@
 from flask.templating import render_template
 
-from azdweb import app
+from content import app
 
 
 @app.route("/2548/")

@@ -7,7 +7,7 @@ import shutil
 from flask import request
 from flask.templating import render_template
 
-from azdweb import app, config
+from content import app, config
 
 repo_path = os.path.abspath("github")
 markdown_root = os.path.abspath("markdown")

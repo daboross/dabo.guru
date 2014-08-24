@@ -5,8 +5,8 @@ import re
 
 from flask import render_template
 
-from azdweb import app
-from azdweb.util import gh_markdown
+from content import app
+from content.util import gh_markdown
 
 root_path = os.path.abspath("markdown")
 

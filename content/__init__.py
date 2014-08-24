@@ -68,6 +68,6 @@ def get_config():
 
 config = get_config()
 
-app = Flask(__name__, template_folder=os.path.abspath('templates'), static_folder=os.path.abspath('static'))
+app = Flask(__name__)
 
-from azdweb import main, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game
+from content import main, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game

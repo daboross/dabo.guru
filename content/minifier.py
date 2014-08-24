@@ -2,7 +2,7 @@ from markupsafe import Markup
 
 import htmlmin
 
-from azdweb import app
+from content import app
 
 
 @app.template_filter("minify")
