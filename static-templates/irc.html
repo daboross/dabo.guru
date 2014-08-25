@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Dabo - Chat{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8  col-md-offset-2
+                        col-xs-12 col-xs-offset-0">
+                <h1 class="title">dabo.guru - chat</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8  col-md-offset-2
+                        col-xs-12 col-xs-offset-0">
+                <div class="list-group">
+                    <a href="./" class="list-group-item">
+                        <h4>Back to main</h4>
+                    </a>
+
+                    <div class="list-group-item">
+                        If you ping me by saying 'Dabo' in a message, I'll get a notification and try to come online if
+                        I'm not already.
+                    </div>
+                    <iframe class="list-group-item"
+                            src="http://irc.spi.gt/iris/?nick=&channels=dabo&fg_color=333&fg_sec_color=333&bg_color=fff"
+                            height="400" width="100%" frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

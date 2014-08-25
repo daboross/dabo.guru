@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Dabo - Index{% endblock %}
+{% block links %}
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8  col-md-offset-2 col-xs-12 col-xs-offset-0">
+                <h1 class="title">dabo.guru</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8  col-md-offset-2 col-xs-12 col-xs-offset-0">
+                <div class="list-group">
+                    <a href="http://daboross.net" class="list-group-item">
+                        <h4>daboross.net</h4>
+                        Main content website.
+                    </a>
+                    <a href="http://repo.dabo.guru" class="list-group-item">
+                        <h4>Public Maven Repository</h4>
+                        Repository containing all api releases that I have published via maven.
+                    </a>
+                    <a href="http://dabo.guru/ci/" class="list-group-item">
+                        <h4>TeamCity</h4>
+                        My CI (continuous integration) server. It hosts builds for all of my Java projects that are
+                        actively being worked on.
+                    </a>
+                    <a href="/irc.html" class="list-group-item">
+                        <h4>Chat - IRC</h4>
+                        My IRC support/help channel. I won't always be online, but there are always around ~20
+                        people idling here. It is a channel on irc.spi.gt.
+                    </a>
+                    <a href="http://znc.dabo.guru:8080" class="list-group-item">
+                        <h4>ZNC</h4>
+                        The control panel for my ZNC server. If you have a znc account on it, you will use this to
+                        change settings.
+                    </a>
+                    <a href="http://dabo.guru/nexus/" class="list-group-item">
+                        <h4>Sonatype Nexus</h4>
+                        The control area for the maven repository listed above. Useful for searching artifacts.
+                    </a>
+
+                    <div class="list-group-item">
+                        <h4>Quick Contact</h4>
+                        This is a form you can use to send me a quick message. If you include contact information, I
+                        will respond.
+                        <div id="form">
+                            <textarea id="send-form" class="form-control" rows="3"
+                                      placeholder="Enter your message to send here"></textarea>
+
+                            <div id="send-value" hidden=hidden>Sending...</div>
+                            <button id="send-button" type="submit" class="btn btn-default text-center"
+                                    onclick="sendData();">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript - Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/send-form.js"></script>
+{% endblock %}

@@ -7,8 +7,8 @@ from flask import Flask
 import jinja2
 
 from content.util import htmlmin_filter
+from content import static_serve
 from pushbullet import PushBullet
-
 
 __all__ = ["app", "config"]
 
@@ -58,15 +58,16 @@ def get_config():
 
 config = get_config()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 app.jinja_loader = jinja2.FileSystemLoader([
     os.path.abspath(os.path.join(app.root_path, "templates")),
     os.path.abspath(os.path.join(os.path.curdir, "static-templates")),
 ])
 
-htmlmin_filter.register(app)
-
 push = PushBullet(config["pushbullet"]["api-key"])
 
-from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api
+# Register everything
+htmlmin_filter.register(app)
+static_serve.register(app)
+from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api, static_serve

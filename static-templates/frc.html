@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block title %}First Team 4030{% endblock %}
+{% block links %}
+    <!-- Custom styles for this page -->
+    <link href="/css/frc.css" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <div class="container marketing">
+        <hr class="featurette-divider">
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h2 class="featurette-heading">This is our robot.</h2>
+                <br><br>
+
+                <h2 class="text-muted">It's a robot.</h2>
+
+                <br><br>
+
+                <div id="form">
+                    <textarea id="send-form" class="form-control" rows="3"
+                              placeholder="Suggest captions"></textarea>
+
+                    <div id="send-value" hidden=hidden>Sending...</div>
+                    <button id="send-button" type="submit" class="btn btn-default text-center"
+                            onclick="sendData();">
+                        Submit
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-5">
+
+                <div id="first" class="carousel dynamic-carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#first" data-slide-to="0" class="active"></li>
+                        <li data-target="#first" data-slide-to="1"></li>
+                        <li data-target="#first" data-slide-to="2"></li>
+                        <li data-target="#first" data-slide-to="3"></li>
+                        <li data-target="#first" data-slide-to="4"></li>
+                        <li data-target="#first" data-slide-to="5"></li>
+                        <li data-target="#first" data-slide-to="6"></li>
+                        <li data-target="#first" data-slide-to="7"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="frc-pics/frc-0.jpg" alt="First slide">
+
+                            <div class="container">
+                                <div class="carousel-caption">
+                                    <h1>Welcome to team 4030.</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-1.jpg">
+
+                            <div class="carousel-caption"><h1>This is our awesome robot</h1></div>
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-2.jpg" class="img img-responsive">
+
+                            <div class="carousel-caption"><h1>Please suggest captions!</h1></div>
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-3.jpg" class="img img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-4.jpg" class="img img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-5.jpg" class="img img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-6.jpg" class="img img-responsive">
+                        </div>
+                        <div class="item">
+                            <img src="frc-pics/frc-7.jpg" class="img img-responsive">
+                        </div>
+                    </div>
+                    <a class="left carousel-control" href="#first" data-slide="prev"><span
+                            class="glyphicon glyphicon-chevron-left"></span></a>
+                    <a class="right carousel-control" href="#first" data-slide="next"><span
+                            class="glyphicon glyphicon-chevron-right"></span></a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <h2 class="featurette-heading">Join us.</h2>
+        <br><br>
+
+        <h2 class="text-muted">We have cookies.</h2>
+
+        <hr class="featurette-divider">
+    </div>
+
+    <!-- Javascript -->
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/frc-new.js"></script>
+    <script src="/js/send-form.js"></script>
+{% endblock %}
