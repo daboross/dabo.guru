@@ -106,3 +106,7 @@ coverage.xml
 /config.json
 /git-cloned/
 /markdown/
+
+# Generated files #
+###################
+/github/
