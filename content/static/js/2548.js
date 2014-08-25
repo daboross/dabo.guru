@@ -19,6 +19,7 @@ function animate(x) {
     x.old_x = x.x;
     x.old_y = x.y;
 }
+
 function update_character() {
     animate(character);
 }
@@ -34,9 +35,11 @@ function update_enemies() {
 function spawn_enemy(x, y, repr, movement) {
     enemies[enemies.length] = {x: x, y: y, repr: repr, movement: movement}
 }
+
 function rand(max) {
     return Math.floor(Math.random() * max)
 }
+
 function spawn_random_enemy() {
     var x, y, repr, movement;
     switch (rand(4)) {
@@ -118,6 +121,7 @@ function spawn_random_enemy() {
     }
     spawn_enemy(x, y, repr, movement)
 }
+
 function main() {
     console.log("Ready!");
     setInterval(update_enemies, 300);
