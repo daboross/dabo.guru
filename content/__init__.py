@@ -4,9 +4,11 @@ import os
 import sys
 
 from flask import Flask
+import jinja2
 
 from content.util import htmlmin_filter
 from pushbullet import PushBullet
+
 
 __all__ = ["app", "config"]
 
@@ -58,9 +60,13 @@ config = get_config()
 
 app = Flask(__name__)
 
+app.jinja_loader = jinja2.FileSystemLoader([
+    os.path.abspath(os.path.join(app.root_path, "templates")),
+    os.path.abspath(os.path.join(os.path.curdir, "static-templates")),
+])
+
 htmlmin_filter.register(app)
 
-# create app
 push = PushBullet(config["pushbullet"]["api-key"])
 
-from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api, game
+from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api
