@@ -3,7 +3,7 @@ import traceback
 
 from flask import render_template, request
 
-from content import app, push, device
+from content import app, push
 
 
 @app.errorhandler(Exception)
@@ -11,7 +11,7 @@ def internal_error(err):
     logging.exception("Exception!")
     try:
         # since we have pushbullet, we can do exception notices :D
-        push.push_note(device, "Python Exception", traceback.format_exc())
+        push.push_note("Python Exception", traceback.format_exc())
     except Exception:
         logging.exception("Exception sending exception note.")
 

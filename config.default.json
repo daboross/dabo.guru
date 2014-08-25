@@ -1,7 +1,6 @@
 {
     "pushbullet": {
-        "api-key": "xxx",
-        "device": "xxx"
+        "api-key": "xxx"
     },
     "github": {
         "api-key-here": {

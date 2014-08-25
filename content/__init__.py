@@ -71,10 +71,8 @@ config = get_config()
 
 app = Flask(__name__)
 
-api_key = config["pushbullet"]["api-key"]
-device = config["pushbullet"]["device"]
 
 # create app
-push = PushBullet(api_key)
+push = PushBullet(config["pushbullet"]["api-key"])
 
 from content import web_api_pages, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game
