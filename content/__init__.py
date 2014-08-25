@@ -4,6 +4,8 @@ import os
 import sys
 
 from flask import Flask
+
+from content.util import htmlmin_filter
 from pushbullet import PushBullet
 
 __all__ = ["app", "config"]
@@ -56,8 +58,9 @@ config = get_config()
 
 app = Flask(__name__)
 
+htmlmin_filter.register(app)
 
 # create app
 push = PushBullet(config["pushbullet"]["api-key"])
 
-from content import web_api_pages, markdown_serv, github_pull, minifier, error_handlers, minecraft_uuids, game
+from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_uuids, game
