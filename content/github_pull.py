@@ -9,7 +9,6 @@ from flask.templating import render_template
 
 from content import app, config
 
-
 repo_path = os.path.abspath("github")
 markdown_root = os.path.abspath("markdown")
 threadpool = ThreadPoolExecutor(2)
@@ -32,16 +31,16 @@ def update_repo(repo_config):
 
     markdown_source = os.path.join(dirname, repo_config["markdown_dir"])
     markdown_dest = os.path.join(markdown_root, name)
-    logging.debug("Copying: {} -> {}".format(markdown_source, markdown_dest))
 
+    logging.debug("Copying: {} -> {}".format(markdown_source, markdown_dest))
     try:
         try:
             shutil.rmtree(markdown_dest)
         except FileNotFoundError:
             pass  # no need to delete a file that doesn't exist
-        logging.debug("Result: {}".format(shutil.copytree(markdown_source, markdown_dest)))
+        shutil.copytree(markdown_source, markdown_dest)
     except Exception:
-        logging.exception("Ah, exception here.")
+        logging.exception("Exception updating repository")
 
 
 @app.route("/webhook", methods=["POST"])
@@ -51,6 +50,7 @@ def webhook():
     api_key = request.args["token"]
 
     if api_key in config["github"]:
+        logging.debug("Submitting repo update for {}".format(config["github"][api_key]))
         threadpool.submit(update_repo, config["github"][api_key])
         return render_template("200.html")
 
