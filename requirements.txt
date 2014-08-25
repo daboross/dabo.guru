@@ -3,3 +3,4 @@ pygments
 misaka
 flask
 htmlmin
+redis

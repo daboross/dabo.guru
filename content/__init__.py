@@ -63,4 +63,4 @@ htmlmin_filter.register(app)
 # create app
 push = PushBullet(config["pushbullet"]["api-key"])
 
-from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_uuids, game
+from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api, game

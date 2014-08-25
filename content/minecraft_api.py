@@ -1,14 +1,16 @@
 import json
 from builtins import list
-import logging
 
 from flask.globals import request
 import requests
+from werkzeug.contrib.cache import RedisCache
 
 from content import app
 
-user_api_url = "https://sessionserver.mojang.com/session/minecraft/profile/"
-uuid_api_url = "https://api.mojang.com/profiles/minecraft/"
+uuid_to_username_url = "https://sessionserver.mojang.com/session/minecraft/profile/"
+username_to_uuid_url = "https://api.mojang.com/profiles/minecraft"
+
+data_cache = RedisCache(key_prefix='dabo.guru:minecraft-api:')
 
 
 class MojangError(Exception):
@@ -23,12 +25,12 @@ class MojangError(Exception):
 def name_to_uuid_page():
     data = request.get_json()
     if data is None:
-        return "Invalid request", 406
+        return "Invalid request: {}".format(request.data), 406
     if len(data) >= 100:
         return "Too many usernames", 406
     if not isinstance(data, list):
         return "Not a list", 406
-    data = [str(user) for user in data]
+    data = tuple(str(user) for user in data)
     try:
         return json.dumps(retrieve_uuids(data))
     except MojangError as e:
@@ -44,7 +46,7 @@ def uuid_to_name_page():
         return "Too many uuids", 406
     if not isinstance(data, list):
         return "Not a list", 406
-    return json.dumps(retrieve_usernames(data))
+    return json.dumps(retrieve_names(data))
 
 
 def id_to_uuid(uuid):
@@ -52,28 +54,34 @@ def id_to_uuid(uuid):
 
 
 def retrieve_uuids(names):
-    logging.info("Names: {}".format(names))
+    cached = data_cache.get("uuids:{}".format(hash(names)))
+    if cached is not None:
+        return cached
     response = requests.post(
-        uuid_api_url,
+        username_to_uuid_url,
         json.dumps(names).encode(),
         headers={"Content-Type": "application/json"}
     )
     data = response.json()
-    logging.info("Data: {}".format(data))
     if "error" in data:
         raise MojangError(data["error"])
     uuids = {}
     for profile in data:
         uuids[profile["name"]] = id_to_uuid(profile["id"])
-
+    data_cache.set("uuids:{}".format(hash(names)), uuids, timeout=14400)
     return uuids
 
 
-def retrieve_usernames(uuids):
+def retrieve_names(uuids):
     names = {}
     for uuid in uuids:
-        response = requests.get(user_api_url + uuid.replace("-", ""))
+        cached = data_cache.get("names:{}".format(uuid))
+        if cached is not None:
+            names[uuid] = cached
+            continue
+        response = requests.get(uuid_to_username_url + uuid.replace("-", ""))
         data = response.json()
         if "name" in data:
             names[uuid] = data["name"]
+            data_cache.set("names:{}".format(uuid), data["name"], timeout=14400)
     return names
