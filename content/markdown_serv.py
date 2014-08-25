@@ -68,16 +68,16 @@ def serve_markdown(page):
     return render_template("markdown.html", title=title, content=content, sidebar=sidebar_content)
 
 
-@app.route("/sw/", defaults={"page": "index"})
-@app.route("/sw/<path:page>")
+@app.route("/skywars/", defaults={"page": "index"})
+@app.route("/skywars/<path:page>")
 def skywars_alias(page):
     if not page:
         page = "index"
     return serve_markdown("skywars/{}".format(page))
 
 
-@app.route("/rt/", defaults={"page": "index"})
-@app.route("/rt/<path:page>")
+@app.route("/robot-tables/", defaults={"page": "index"})
+@app.route("/robot-tables/<path:page>")
 def robot_tables_alias(page):
     if not page:
         page = "index"
