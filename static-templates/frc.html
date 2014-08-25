@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}First Team 4030{% endblock %}
 {% block links %}
-    <link href="/css/frc.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename="css/frc.css") }}" rel="stylesheet">
 {% endblock %}
 {% block body %}
     <div class="container marketing">
@@ -95,8 +95,8 @@
     </div>
 
     <!-- Javascript -->
-    <script src="/js/jquery.js"></script>
-    <script src="/js/bootstrap.js"></script>
-    <script src="/js/frc.js"></script>
-    <script src="/js/send-form.js"></script>
+    <script src="{{ url_for('static', filename="js/jquery.js") }}"></script>
+    <script src="{{ url_for('static', filename="js/bootstrap.js") }}"></script>
+    <script src="{{ url_for('static', filename="js/frc.js") }}"></script>
+    <script src="{{ url_for('static', filename="js/send-form.js") }}"></script>
 {% endblock %}

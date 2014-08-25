@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Dabo - Index{% endblock %}
 {% block links %}
-    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename="css/index.css") }}">
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -62,6 +62,6 @@
     </div>
 
     <!-- Javascript - Placed at the end of the document so the pages load faster -->
-    <script src="/js/jquery.js"></script>
-    <script src="/js/send-form.js"></script>
+    <script src="{{ url_for('static', filename="js/jquery.js") }}"></script>
+    <script src="{{ url_for('static', filename="js/send-form.js") }}"></script>
 {% endblock %}
