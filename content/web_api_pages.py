@@ -5,13 +5,13 @@ import logging.config
 
 from flask import request, render_template
 
-from content import app, push, device
+from content import app, push
 
 
 @app.route("/notify", methods=["POST"])
 def notify_respond():
     logging.info("Web notice: " + request.data.decode())
-    push.push_note(device, "Web Notice", request.data.decode())
+    push.push_note("dabo.guru note", request.data.decode())
     return """Success\n"""
 
 
