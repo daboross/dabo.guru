@@ -1,5 +1,9 @@
 {% extends "single-item-layout.html" %}
 {% block title %}404 Page not found{% endblock %}
 {% block content %}
-    <h4>Markdown page "{{ page }}" not found.</h4>
+    {% if page %}
+        <h4>Page "{{ page }}" not found for "{{ project }}".</h4>
+    {% else %}
+        <h4>Project "{{ project }}" not found.</h4>
+    {% endif %}
 {% endblock %}

@@ -43,42 +43,33 @@ def load_cached(filename):
 
     return title, contents
 
+@app.route("/projects/<project>/", defaults={"page": ""})
+@app.route("/projects/<project>/<path:page>")
+def serve_markdown(project, page):
+    project_basedir = os.path.join(root_path, project)
+    if not os.path.exists(project_basedir):
+        return render_template("markdown-404.html", project=project), 404
 
-@app.route("/md/", defaults={"page": "index"})
-@app.route("/md/<path:page>")
-def serve_markdown(page):
-    if "." in page:
-        return render_template("markdown-404.html", page=page), 404
-    if not page:
-        page = "index"
-    if page.endswith("/"):
-        page += "index"
+    page = os.path.normpath(page)
+    if page.startswith("..") or page.startswith("/"):
+        return render_template("markdown-404.html", project=project, page=page), 404
 
-    filename = os.path.join(root_path, "{}.md".format(page))
+    # normpath again to catch the case where page is '.'
+    filename = os.path.normpath(os.path.join(project_basedir, page))
+
+    if os.path.isdir(filename):
+        filename = os.path.join(filename, "index")
+
+    filename += ".md"
     if not os.path.exists(filename):
-        return render_template("markdown-404.html", page=page), 404
-    sidebar = os.path.join(os.path.dirname(filename), "sidebar.md")
+        return render_template("markdown-404.html", project=project, page=page), 404
+
+    sidebar = os.path.join(project_basedir, "sidebar.md")
     if os.path.exists(sidebar):
-        ignored_title, sidebar_content = load_cached(sidebar)
+        _, sidebar_content = load_cached(sidebar)
     else:
         sidebar_content = ""
     title, content = load_cached(filename)
     if title is None:
-        title = page
+        title = "{} - {}".format(project, page)
     return render_template("markdown.html", title=title, content=content, sidebar=sidebar_content)
-
-
-@app.route("/skywars/", defaults={"page": "index"})
-@app.route("/skywars/<path:page>")
-def skywars_alias(page):
-    if not page:
-        page = "index"
-    return serve_markdown("skywars/{}".format(page))
-
-
-@app.route("/robot-tables/", defaults={"page": "index"})
-@app.route("/robot-tables/<path:page>")
-def robot_tables_alias(page):
-    if not page:
-        page = "index"
-    return serve_markdown("robot-tables/{}".format(page))

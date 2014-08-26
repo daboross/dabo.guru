@@ -70,4 +70,4 @@ push = PushBullet(config["pushbullet"]["api-key"])
 # Register everything
 htmlmin_filter.register(app)
 static_serve.register(app)
-from content import web_api_pages, markdown_serv, github_pull, error_handlers, minecraft_api
+from content import web_api_pages, documentation_serve, documentation_update, error_handlers, minecraft_api
