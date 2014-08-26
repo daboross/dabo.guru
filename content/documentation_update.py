@@ -6,6 +6,7 @@ import shutil
 
 from flask import request
 from flask.templating import render_template
+from flask.wrappers import Response
 
 from content import app, config
 
@@ -52,6 +53,6 @@ def webhook():
     if api_key in config["github"]:
         logging.debug("Submitting repo update for {}".format(config["github"][api_key]))
         threadpool.submit(update_repo, config["github"][api_key])
-        return render_template("200.html")
+        return Response("Update successful", 200, mimetype="text/plain")
 
     return render_template("403.html"), 403
