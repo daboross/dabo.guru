@@ -1,0 +1,30 @@
+{% extends "sidebar-layout.html" %}
+{% block title %}Dabo - Resources{% endblock %}
+{% block links %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename="css/index.css") }}">
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <h1 class="title">Resource Directory</h1>
+        <div class="list-group">
+            <a href="http://repo.dabo.guru/" class="list-group-item">
+                <h4>Public Maven Repository</h4>
+                Repository containing all api releases that I have published via maven.
+            </a>
+            <a href="http://ci.dabo.guru/" class="list-group-item">
+                <h4>TeamCity</h4>
+                My CI (continuous integration) server. It hosts builds for all of my Java projects that are
+                actively being worked on.
+            </a>
+            <a href="http://znc.dabo.guru:8080" class="list-group-item">
+                <h4>ZNC</h4>
+                The control panel for my ZNC server. If you have a znc account on it, you will use this to
+                change settings.
+            </a>
+            <a href="http://repo.dabo.guru/nexus/" class="list-group-item">
+                <h4>Sonatype Nexus</h4>
+                The control area for the maven repository listed above. Useful for searching artifacts.
+            </a>
+        </div>
+    </div>
+{% endblock %}

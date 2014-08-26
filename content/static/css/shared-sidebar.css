@@ -10,7 +10,7 @@
     height: 100%;
     margin-left: -200px;
     overflow-y: auto;
-    background: #000000;
+    font-family: Arbutus, serif;
 }
 
 #page-content-wrapper {
@@ -37,17 +37,17 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: #333333;
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li > a:hover {
     text-decoration: none;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    background: #000000;
 }
 
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
+.sidebar-nav li:active,
+.sidebar-nav li:focus {
     text-decoration: none;
 }
 
@@ -58,12 +58,12 @@
 }
 
 .sidebar-nav > .sidebar-brand a {
-    color: #999999;
+    color: #333333;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {
     color: #ffffff;
-    background: none;
+    background: #000000;
 }
 
 @media (min-width: 768px) {

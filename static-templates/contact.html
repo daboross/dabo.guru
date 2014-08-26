@@ -1,0 +1,39 @@
+{% extends "sidebar-layout.html" %}
+{% block title %}Dabo - Contact{% endblock %}
+{% block links %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename="css/index.css") }}">
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <h1 class="title">Contact</h1>
+
+        <h3>Email</h3>
+        <p>Email me at <a href="mailto:daboross@daboross.net">daboross@daboross.net</a>.</p>
+
+        <h3>IRC</h3>
+        <p>I'm on <a href="irc://chat.freenode.net/">freenode</a>, <a href="irc://irc.esper.net">esper.net</a>,
+            and <a href="irc://irc.spi.gt">spi.gt</a> under the nick 'Dabo'.</p>
+        <p>To get to my personal IRC channel, use <a href="irc://irc.spi.gt/#dabo">this IRC link</a>
+            or <a href="http://irc.spi.gt/iris/?channels=dabo">this web chat link</a>.</p>
+
+        <h3>Google+</h3>
+        <p>You can find me on Google+ at <a href="https://google.com/+daboross">https://google.com/+daboross</a></p>
+
+        <h3>Contact Form</h3>
+        You can also use the form below to send me a message.
+        <br>
+        <div id="form">
+            <textarea id="send-form" class="form-control" rows="3"
+                      placeholder="Enter your message to send here"></textarea>
+
+            <div id="send-value" hidden=hidden>Sending...</div>
+            <button id="send-button" type="submit" class="btn btn-block btn-default" onclick="sendData();">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <!-- Javascript - Placed at the end of the document so the pages load faster -->
+    <script src="{{ url_for('static', filename="js/jquery.js") }}"></script>
+    <script src="{{ url_for('static', filename="js/send-form.js") }}"></script>
+{% endblock %}

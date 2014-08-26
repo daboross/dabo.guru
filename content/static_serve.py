@@ -1,9 +1,14 @@
+import logging
+import os
+
 from flask.templating import render_template
 
 files = {
     "/": "index.html",
     "/frc.html": "frc.html",
     "/irc.html": "irc.html",
+    "/resources.html": "resources.html",
+    "/contact.html": "contact.html"
 }
 
 
@@ -16,4 +21,4 @@ def rendering_function(template):
 
 def register(app):
     for url, template in files.items():
-        app.add_url_rule(url, "static-serve-{}".format(template), rendering_function(template))
+        app.add_url_rule(url, os.path.splitext(template)[0], rendering_function(template))

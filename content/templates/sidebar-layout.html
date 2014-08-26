@@ -9,51 +9,30 @@
             <!-- Bootstrap core CSS -->
             <link href="{{ url_for('static', filename="css/bootstrap.css") }}" rel="stylesheet">
             <!-- Custom styles for this page -->
+            <link href="{{ url_for('static', filename="css/google-fonts-arbutus.css") }}" rel="stylesheet">
             <link href="{{ url_for('static', filename="css/shared-sidebar.css") }}" rel="stylesheet">
             {% block links %}{% endblock %}
         </head>
         <body>
             <div id="wrapper">
-                <!-- Sidebar -->
                 <div id="sidebar-wrapper">
                     <ul class="sidebar-nav">
                         <li class="sidebar-brand">
-                            <a href="#">
-                                Start Bootstrap
-                            </a>
+                            <a href="{{ url_for("index") }}">Home</a>
                         </li>
                         <li>
-                            <a href="#">Dashboard</a>
+                            <a href="{{ url_for("resources") }}">Resources</a>
                         </li>
                         <li>
-                            <a href="#">Shortcuts</a>
-                        </li>
-                        <li>
-                            <a href="#">Overview</a>
-                        </li>
-                        <li>
-                            <a href="#">Events</a>
-                        </li>
-                        <li>
-                            <a href="#">About</a>
-                        </li>
-                        <li>
-                            <a href="#">Services</a>
-                        </li>
-                        <li>
-                            <a href="#">Contact</a>
+                            <a href="{{ url_for("contact") }}">Contact</a>
                         </li>
                     </ul>
                 </div>
-                <!-- /#sidebar-wrapper -->
 
-                <!-- Page Content -->
                 <div id="page-content-wrapper">
                     {% block body %}{% endblock %}
                 </div>
-                <!-- /#page-content-wrapper -->
             </div>
-            <!-- /#wrapper -->
             <script src="{{ url_for('static', filename="/js/analytics.js") }}"></script>
         </body>
     </html>
