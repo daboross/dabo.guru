@@ -62,7 +62,7 @@ app = Flask(__name__, static_url_path='')
 
 app.jinja_loader = jinja2.FileSystemLoader([
     os.path.abspath(os.path.join(app.root_path, "templates")),
-    os.path.abspath(os.path.join(os.path.curdir, "static-templates")),
+    os.path.abspath(os.path.abspath("static-templates")),
 ])
 
 push = PushBullet(config["pushbullet"]["api-key"])
