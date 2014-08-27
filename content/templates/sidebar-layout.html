@@ -30,10 +30,13 @@
                 </div>
 
                 <div id="page-content-wrapper">
-                    {% block body %}{% endblock %}
+                    <div class="container-fluid">
+                        {% block body %}{% endblock %}
+                    </div>
                 </div>
             </div>
             <script src="{{ url_for('static', filename="/js/analytics.js") }}"></script>
+            {% block scripts %}{% endblock %}
         </body>
     </html>
 {% endfilter %}
