@@ -1,9 +1,0 @@
-{% extends "single-item-layout.html" %}
-{% block title %}Invalid OAuth response{% endblock %}
-{% block content %}
-    <h4>The URL provided is invalid. The following data is missing <b>oauth_token</b> and/or <b>oauth_verifier</b></h4>
-    <label>
-        <textarea class="form-control" style="resize: none;" rows="{{ rows }}"
-                  contenteditable="false">{{ data }}</textarea>
-    </label>
-{% endblock %}
