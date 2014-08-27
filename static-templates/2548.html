@@ -7,8 +7,6 @@
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
-            <script src="{{ url_for('static', filename="js/jquery.js") }}"></script>
-            <script src="{{ url_for('static', filename="js/2548.js") }}"></script>
             <style>
                 .main {
                     font-family: 'Inconsolata', monospace;
@@ -34,6 +32,7 @@
                     </tr>
                 {% endfor %}
             </table>
+            <script src="{{ asset_url('2548-js') }}"></script>
         </body>
     </html>
 {% endfilter %}

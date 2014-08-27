@@ -26,8 +26,3 @@ def page_not_found(err):
 @app.errorhandler(403)
 def unauthorized(err):
     return render_template("403.html", url=request.url), 403
-
-
-@app.route("/403/")
-def unauthorized_manual():
-    return render_template("403.html", url=request.url), 403

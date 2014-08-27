@@ -1,4 +1,3 @@
-import logging
 import os
 
 from flask.templating import render_template

@@ -6,11 +6,8 @@
             <!-- meta -->
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- Bootstrap core CSS -->
-            <link href="{{ url_for('static', filename="css/bootstrap.css") }}" rel="stylesheet">
-            <!-- Custom styles for this page -->
-            <link href="{{ url_for('static', filename="css/google-fonts-arbutus.css") }}" rel="stylesheet">
-            <link href="{{ url_for('static', filename="css/shared-sidebar.css") }}" rel="stylesheet">
+            <!-- Bootstrap core CSS  and custom styles for this page -->
+            <link href="{{ asset_url('sidebar-css') }}" rel="stylesheet">
             {% block links %}{% endblock %}
         </head>
         <body>
@@ -35,8 +32,9 @@
                     </div>
                 </div>
             </div>
-            <script src="{{ url_for('static', filename="/js/analytics.js") }}"></script>
-            {% block scripts %}{% endblock %}
+            {% block scripts %}
+                <script src="{{ asset_url("analytics-js") }}"></script>
+            {% endblock %}
         </body>
     </html>
 {% endfilter %}

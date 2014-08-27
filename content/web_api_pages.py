@@ -13,14 +13,14 @@ invalid_response_title = "Invalid OAuth response"
 invalid_response_desc = "The URL provided is invalid. Parameters oauth_token and/or oauth_verifier are missing"
 
 
-@app.route("/notify", methods=["POST"])
+@app.route("/notify/", methods=["POST"])
 def notify_respond():
     logging.info("Web notice: " + request.data.decode())
     push.push_note("dabo.guru note", request.data.decode())
     return """Success\n"""
 
 
-@app.route("/oauth", methods=["GET"])
+@app.route("/oauth/", methods=["GET"])
 def oauth_respond():
     if "oauth_token" in request.args and "oauth_verifier" in request.args:
         data = base64.b64encode(json.dumps(request.args).encode()).decode()

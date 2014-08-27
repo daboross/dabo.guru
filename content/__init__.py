@@ -5,8 +5,9 @@ import sys
 
 from flask import Flask
 import jinja2
+from webassets.env import Environment
 
-from content.util import htmlmin_filter, gh_markdown
+from content.util import htmlmin_filter, gh_markdown, webassets_integration
 from content import static_serve
 from pushbullet import PushBullet
 
@@ -67,9 +68,34 @@ app.jinja_loader = jinja2.FileSystemLoader([
 
 push = PushBullet(config["pushbullet"]["api-key"])
 
+assets = Environment(os.path.abspath("static"), "/")
+assets.append_path(app.static_folder, "/")
+assets.auto_build = False
+
+# Create assets
+assets.register('bootstrap-css', 'css/bootstrap.css', filters='cssmin', output='css/bootstrap.css')
+
+assets.register('sidebar-css', 'css/bootstrap.css', 'css/google-fonts-arbutus.css', 'css/shared-sidebar.css',
+                filters='cssmin', output='css/shared.css')
+
+assets.register('frc-css', 'css/bootstrap.css', 'css/frc.css',
+                filters='cssmin', output='css/frc.css')
+
+assets.register('markdown-css', 'css/bootstrap.css', 'css/markdown-sidebar.css',
+                filters='cssmin', output='css/documentation.css')
+
+# Shared javascript
+assets.register('analytics-js', 'js/analytics.js', filters='rjsmin', output='js/analytics.js')
+assets.register('shared-js', 'js/analytics.js', 'js/jquery.js', filters='rjsmin', output='js/shared.js')
+# Individual page javascript
+assets.register('contact-js', 'js/send-form.js', filters='rjsmin', output='js/contact.js')
+assets.register('2548-js', 'js/2548.js', filters='rjsmin', output='js/2548.js')
+assets.register('frc-js', 'js/bootstrap.js', 'js/frc.js', 'js/send-form.js', filters='rjsmin', output='js/frc.js')
+
 # Register filters
 htmlmin_filter.register(app)
 gh_markdown.register(app)
+webassets_integration.Integration(assets).register(app)
 # Register webpages
 static_serve.register(app)
 from content import web_api_pages, documentation_serve, documentation_update, error_handlers, minecraft_api
