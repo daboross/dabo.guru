@@ -8,4 +8,4 @@ def minify_filter(s):
 
 
 def register(app):
-    app.template_filter("minify")(minify_filter)
+    app.add_template_filter(minify_filter, name="minify")

@@ -6,7 +6,7 @@ import sys
 from flask import Flask
 import jinja2
 
-from content.util import htmlmin_filter
+from content.util import htmlmin_filter, gh_markdown
 from content import static_serve
 from pushbullet import PushBullet
 
@@ -67,7 +67,9 @@ app.jinja_loader = jinja2.FileSystemLoader([
 
 push = PushBullet(config["pushbullet"]["api-key"])
 
-# Register everything
+# Register filters
 htmlmin_filter.register(app)
+gh_markdown.register(app)
+# Register webpages
 static_serve.register(app)
 from content import web_api_pages, documentation_serve, documentation_update, error_handlers, minecraft_api
