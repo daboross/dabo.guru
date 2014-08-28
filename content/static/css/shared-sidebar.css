@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Arbutus);
+
 #wrapper {
     padding-left: 0;
 }
@@ -11,7 +12,17 @@
     height: 100%;
     margin-left: -200px;
     overflow-y: auto;
-    font-family: Arbutus, serif;
+}
+
+#mobile-nav {
+    min-width: auto;
+    width: 100%;
+    text-align: center;
+    font-size: large;
+}
+
+#mobile-nav > ul {
+    padding-left: 0;
 }
 
 #page-content-wrapper {
@@ -35,34 +46,45 @@
     line-height: 40px;
 }
 
-.sidebar-nav li a {
+.mobile-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+    list-style: none;
+    display: block;
+}
+
+.navigation {
+    font-family: Arbutus, serif;
+}
+
+.nav-item a {
     display: block;
     text-decoration: none;
     color: #333333;
 }
 
-.sidebar-nav li > a:hover {
+.nav-item a:hover {
     text-decoration: none;
     color: #ffffff;
     background: #000000;
 }
 
-.sidebar-nav li:active,
-.sidebar-nav li:focus {
+.nav-item:active,
+.nav-item:focus {
     text-decoration: none;
 }
 
-.sidebar-nav > .sidebar-brand {
+.navigation > .sidebar-brand {
     height: 65px;
     font-size: 18px;
     line-height: 60px;
 }
 
-.sidebar-nav > .sidebar-brand a {
+.navigation > .sidebar-brand a {
     color: #333333;
 }
 
-.sidebar-nav > .sidebar-brand a:hover {
+.navigation > .sidebar-brand a:hover {
     color: #ffffff;
     background: #000000;
 }
@@ -78,5 +100,9 @@
 
     #page-content-wrapper {
         padding: 20px;
+    }
+
+    #mobile-nav {
+        display: none;
     }
 }

@@ -12,18 +12,18 @@
         </head>
         <body>
             <div id="wrapper">
-                <div id="sidebar-wrapper">
+                <div id="sidebar-wrapper" class="navigation">
                     <ul class="sidebar-nav">
-                        <li class="sidebar-brand">
+                        <li class="nav-item sidebar-brand">
                             <a href="{{ url_for("index") }}">Home</a>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             <a href="{{ url_for("projects") }}">Projects</a>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             <a href="{{ url_for("resources") }}">Resources</a>
                         </li>
-                        <li>
+                        <li class="nav-item">
                             <a href="{{ url_for("contact") }}">Contact</a>
                         </li>
                     </ul>
@@ -33,6 +33,22 @@
                     <div class="container-fluid">
                         {% block body %}{% endblock %}
                     </div>
+                </div>
+                <div id="mobile-nav" class="navigation">
+                    <ul>
+                        <li class="nav-item sidebar-brand">
+                            <a href="{{ url_for("index") }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for("projects") }}">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for("resources") }}">Resources</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for("contact") }}">Contact</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             {% block scripts %}
