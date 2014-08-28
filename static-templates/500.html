@@ -1,10 +1,8 @@
-{% extends "simple-layout.html" %}
+{% extends "error-layout.html" %}
 {% block title %}500 Internal Server Error{% endblock %}
-{% block body %}
-    <div class="container">
-        <h1>500 Internal Server Error</h1>
-        <p>The server encountered an internal error and was unable to complete your request. Either the server is
-            overloaded or there is an error in the application.</p>
-        <p>Here's a link to the <a href="/">home page</a>.</p>
-    </div>
+{% block content %}
+    <h1>500 Internal Server Error</h1>
+    <p>The server encountered an internal error and was unable to complete your request. Either the server is
+        overloaded or there is an error in the application.</p>
+    <p>Here's a link to the <a href="/">home page</a>.</p>
 {% endblock %}

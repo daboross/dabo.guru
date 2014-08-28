@@ -1,9 +1,7 @@
-{% extends "simple-layout.html" %}
+{% extends "error-layout.html" %}
 {% block title %}403 Unauthorized{% endblock %}
-{% block body %}
-    <div class="container">
-        <h1>403 Unauthorized</h1>
-        <p>You have attempted to access a resource {{ url }} for which you do not have the proper authorization.</p>
-        <p>Here's a link to the <a href="/">home page</a>.</p>
-    </div>
+{% block content %}
+    <h1>403 Unauthorized</h1>
+    <p>You have attempted to access a resource {{ url }} for which you do not have the proper authorization.</p>
+    <p>Here's a link to the <a href="/">home page</a>.</p>
 {% endblock %}
