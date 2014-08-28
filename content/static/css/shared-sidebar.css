@@ -74,19 +74,8 @@
     text-decoration: none;
 }
 
-.navigation > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
-}
-
-.navigation > .sidebar-brand a {
-    color: #333333;
-}
-
-.navigation > .sidebar-brand a:hover {
-    color: #ffffff;
-    background: #000000;
+.sidebar-brand {
+    font-size: 20px;
 }
 
 @media (min-width: 768px) {
