@@ -37,17 +37,23 @@ def build_pages():
 
 
 def main():
-    if sys.argv:
+    args = sys.argv[1:]
+    if args:
         is_assets = False
         is_pages = False
-        for arg in sys.argv:
+        for arg in args:
             if arg == '--assets' or arg == '-a':
                 is_assets = True
             elif arg == "--pages" or arg == "-p":
                 is_pages = True
+            else:
+                print("Unknown argument '{}'".format(arg))
+                print("Valid arguments: --assets -a --pages -p")
+                return
     else:
         is_assets = True
         is_pages = True
+
     if is_assets:
         build_assets()
     if is_pages:
