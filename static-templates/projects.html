@@ -1,0 +1,13 @@
+{% extends "sidebar-layout.html" %}
+{% block title %}Dabo - Projects{% endblock %}
+{% block body %}
+    <h1 class="title">Projects</h1>
+    {% filter markdown %}
+        I plan to include some more projects here in the future, this is currently just a test page.
+
+        |Name|Desc|
+        |:--|:--|
+        |Test project|Test description|
+        |Another project|Another description|
+    {% endfilter %}
+{% endblock %}

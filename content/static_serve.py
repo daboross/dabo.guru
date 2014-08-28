@@ -7,7 +7,8 @@ files = {
     "/frc.html": "frc.html",
     "/irc.html": "irc.html",
     "/resources.html": "resources.html",
-    "/contact.html": "contact.html"
+    "/contact.html": "contact.html",
+    "/projects/": "projects.html"
 }
 
 
