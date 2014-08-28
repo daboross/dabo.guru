@@ -11,21 +11,18 @@
             {% block links %}{% endblock %}
         </head>
         <body>
+            {% set pages = (("projects", "Projects"), ("resources", "Resources"), ("contact", "Contact")) %}
             <div id="wrapper">
                 <div id="sidebar-wrapper" class="navigation">
                     <ul class="sidebar-nav">
                         <li class="nav-item sidebar-brand">
                             <a href="{{ url_for("index") }}">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("projects") }}">Projects</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("resources") }}">Resources</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("contact") }}">Contact</a>
-                        </li>
+                        {% for page, name in pages %}
+                            <li class="nav-item">
+                                <a href="{{ url_for(page) }}">{{ name }}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
 
@@ -39,15 +36,11 @@
                         <li class="nav-item sidebar-brand">
                             <a href="{{ url_for("index") }}">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("projects") }}">Projects</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("resources") }}">Resources</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for("contact") }}">Contact</a>
-                        </li>
+                        {% for page, name in pages %}
+                            <li class="nav-item">
+                                <a href="{{ url_for(page) }}">{{ name }}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
