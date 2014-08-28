@@ -9,7 +9,8 @@ class Integration:
         """
         :type bundle_name: str
         """
-        return self.env[bundle_name].urls()[0]
+        urls = self.env[bundle_name].urls()
+        return "/{}".format(urls[0])  # /{} to make url absolute
 
     def register(self, app):
         app.jinja_env.globals.update(asset_url=self.asset_url)
