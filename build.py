@@ -1,16 +1,17 @@
 import os
+import sys
 
 from flask.ext.frozen import Freezer
 import webassets
 
 from content import app, assets
 
-bundle_files = []
-for bundle in assets:
-    assert isinstance(bundle, webassets.Bundle)
-    print("Building bundle {}".format(bundle.output))
-    bundle.build(force=True, disable_cache=True)
-    bundle_files.append(bundle.output)
+
+def build_assets():
+    for bundle in assets:
+        assert isinstance(bundle, webassets.Bundle)
+        print("Building bundle {}".format(bundle.output))
+        bundle.build(force=True, disable_cache=True)
 
 
 # This is a copy of Freezer.no_argument_rules() modified to ignore certain paths
@@ -22,12 +23,35 @@ def no_argument_rules_urls_with_ignore():
             yield rule.endpoint, {}
 
 
-app.config['FREEZER_DESTINATION'] = os.path.abspath("static")
-app.config['FREEZER_BASE_URL'] = "http://dabo.guru/"
-app.config['FREEZER_DESTINATION_IGNORE'] = bundle_files
-app.config['FREEZER_IGNORE_ENDPOINTS'] = ['oauth_respond', 'mc_api_name', 'mc_api_uuid', 'serve_markdown']
-freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
-freezer.register_generator(no_argument_rules_urls_with_ignore)
+def build_pages():
+    ignored = [bundle.output for bundle in assets]
+    app.config['FREEZER_DESTINATION'] = os.path.abspath("static")
+    app.config['FREEZER_BASE_URL'] = "http://dabo.guru/"
+    app.config['FREEZER_DESTINATION_IGNORE'] = ignored
+    app.config['FREEZER_IGNORE_ENDPOINTS'] = ['oauth_respond', 'mc_api_name', 'mc_api_uuid', 'serve_markdown']
+    freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
+    freezer.register_generator(no_argument_rules_urls_with_ignore)
 
-print("Freezing")
-freezer.freeze()
+    print("Freezing")
+    freezer.freeze()
+
+
+def main():
+    if sys.argv:
+        is_assets = False
+        is_pages = False
+        for arg in sys.argv:
+            if arg == '--assets' or arg == '-a':
+                is_assets = True
+            elif arg == "--pages" or arg == "-p":
+                is_pages = True
+    else:
+        is_assets = True
+        is_pages = True
+    if is_assets:
+        build_assets()
+    if is_pages:
+        build_pages()
+
+
+main()
