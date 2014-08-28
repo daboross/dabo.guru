@@ -22,7 +22,7 @@ class MojangError(Exception):
 
 
 @app.route("/name-uuid/", methods=["POST"])
-def name_to_uuid_page():
+def mc_api_uuid():
     data = request.get_json()
     if data is None:
         return "Invalid request: {}".format(request.data), 406
@@ -38,7 +38,7 @@ def name_to_uuid_page():
 
 
 @app.route("/uuid-name/", methods=["POST"])
-def uuid_to_name_page():
+def mc_api_name():
     data = request.get_json()
     if data is None:
         return "Invalid request", 406
