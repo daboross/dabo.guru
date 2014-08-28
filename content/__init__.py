@@ -68,29 +68,43 @@ app.jinja_loader = jinja2.FileSystemLoader([
 
 push = PushBullet(config["pushbullet"]["api-key"])
 
-assets = Environment(os.path.abspath("static"), "/")
+assets = Environment(os.path.abspath(os.path.join("static", "assets")), "assets/")
 assets.append_path(app.static_folder, "/")
 assets.auto_build = False
+assets.url_expire = True
+assets.cache = False
+assets.manifest = "file:{}".format(os.path.abspath(os.path.join("static", ".webassets-manifest")))
 
 # Create assets
-assets.register('bootstrap-css', 'css/bootstrap.css', filters='cssmin', output='css/bootstrap.css')
+assets.register('bootstrap-css', 'css/bootstrap.css',
+                filters='cssmin', output='bootstrap.css')
 
 assets.register('sidebar-css', 'css/bootstrap.css', 'css/google-fonts-arbutus.css', 'css/shared-sidebar.css',
-                filters='cssmin', output='css/shared.css')
+                filters='cssmin', output='shared.css')
 
 assets.register('frc-css', 'css/bootstrap.css', 'css/frc.css',
-                filters='cssmin', output='css/frc.css')
+                filters='cssmin', output='frc.css')
 
 assets.register('markdown-css', 'css/bootstrap.css', 'css/markdown-sidebar.css',
-                filters='cssmin', output='css/documentation.css')
+                filters='cssmin', output='documentation.css')
 
 # Shared javascript
-assets.register('analytics-js', 'js/analytics.js', filters='rjsmin', output='js/analytics.js')
-assets.register('shared-js', 'js/analytics.js', 'js/jquery.js', filters='rjsmin', output='js/shared.js')
+assets.register('analytics-js', 'js/analytics.js',
+                filters='rjsmin', output='analytics.js')
+
+assets.register('shared-js', 'js/analytics.js', 'js/jquery.js',
+                filters='rjsmin', output='shared.js')
+
 # Individual page javascript
-assets.register('contact-js', 'js/send-form.js', filters='rjsmin', output='js/contact.js')
-assets.register('2548-js', 'js/2548.js', filters='rjsmin', output='js/2548.js')
-assets.register('frc-js', 'js/bootstrap.js', 'js/frc.js', 'js/send-form.js', filters='rjsmin', output='js/frc.js')
+
+assets.register('contact-js', 'js/send-form.js',
+                filters='rjsmin', output='contact.js')
+
+assets.register('2548-js', 'js/2548.js',
+                filters='rjsmin', output='2548.js')
+
+assets.register('frc-js', 'js/bootstrap.js', 'js/frc.js', 'js/send-form.js',
+                filters='rjsmin', output='frc.js')
 
 # Register filters
 htmlmin_filter.register(app)
