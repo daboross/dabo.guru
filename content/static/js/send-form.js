@@ -1,7 +1,11 @@
 function sendSuccess(data, textStatus, jqXHR) {
     var $value = $("#send-value");
     $value.show();
-    $value.html("Success!")
+    if (textStatus === "success") {
+        $value.html("Success!")
+    } else {
+        $value.html("Error " + jqXHR.status + "!")
+    }
 }
 
 function sendFail(data, textStatus, jqXHR) {
@@ -13,7 +17,7 @@ function sendFail(data, textStatus, jqXHR) {
 function sendData() {
     var sendForm = $("#send-form");
     var request = $.ajax({
-                             url: "/notify",
+                             url: "/notify/",
                              type: "POST",
                              data: sendForm.val(),
                              complete: sendSuccess,
