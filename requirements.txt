@@ -3,6 +3,7 @@ pygments
 misaka
 flask
 htmlmin
+cssmin
 redis
 webassets
 frozen-flask
