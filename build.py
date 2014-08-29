@@ -31,7 +31,7 @@ def build_pages():
     app.config['FREEZER_IGNORE_ENDPOINTS'] = ['oauth_respond', 'mc_api_name', 'mc_api_uuid', 'serve_markdown']
     freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
     freezer.register_generator(no_argument_rules_urls_with_ignore)
-
+    freezer.register_generator(lambda: ("/favicon.ico",))
     print("Freezing")
     freezer.freeze()
 
