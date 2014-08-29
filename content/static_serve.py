@@ -8,7 +8,11 @@ files = {
     "/irc.html": "irc.html",
     "/resources.html": "resources.html",
     "/contact.html": "contact.html",
-    "/projects/": "projects.html"
+    "/projects/": "projects.html",
+    # error pages
+    "/errors/403.html": "403.html",
+    "/errors/404.html": "404.html",
+    "/errors/500.html": "500.html",
 }
 
 
