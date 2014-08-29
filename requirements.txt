@@ -6,5 +6,4 @@ htmlmin
 redis
 webassets
 frozen-flask
-git+https://github.com/lelit/slimit/#egg=slimit
 git+https://github.com/dabeaz/ply#egg=ply
