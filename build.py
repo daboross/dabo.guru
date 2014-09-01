@@ -28,7 +28,8 @@ def build_pages():
     app.config['FREEZER_DESTINATION'] = os.path.abspath("static")
     app.config['FREEZER_BASE_URL'] = "http://dabo.guru/"
     app.config['FREEZER_DESTINATION_IGNORE'] = ignored
-    app.config['FREEZER_IGNORE_ENDPOINTS'] = ['oauth_respond', 'mc_api_name', 'mc_api_uuid', 'serve_markdown']
+    app.config['FREEZER_IGNORE_ENDPOINTS'] = ['oauth_respond', 'mc_api_name', 'mc_api_uuid', 'serve_markdown',
+                                              'uuid_api']
     freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
     freezer.register_generator(no_argument_rules_urls_with_ignore)
     freezer.register_generator(lambda: ("/favicon.ico",))

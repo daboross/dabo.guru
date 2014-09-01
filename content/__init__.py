@@ -112,4 +112,4 @@ gh_markdown.register(app)
 webassets_integration.Integration(assets).register(app)
 # Register webpages
 static_serve.register(app)
-from content import web_api_pages, documentation_serve, documentation_update, error_handlers, minecraft_api
+from content import web_api_pages, documentation_serve, documentation_update, error_handlers, minecraft_api, mirror
