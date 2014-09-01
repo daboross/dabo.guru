@@ -14,8 +14,8 @@ data_cache = RedisCache(key_prefix='dabo.guru:minecraft-api:')
 
 
 class MojangError(Exception):
-    def __init__(self, message):
-        self.message = message
+    def __init__(self, data):
+        self.message = "{}: {}".format(data['error'], data['errorMessage'])
 
     def __str__(self):
         return self.message
@@ -64,7 +64,7 @@ def retrieve_uuids(names):
     )
     data = response.json()
     if "error" in data:
-        raise MojangError(data["error"])
+        raise MojangError(data)
     uuids = {}
     for profile in data:
         uuids[profile["name"]] = id_to_uuid(profile["id"])
