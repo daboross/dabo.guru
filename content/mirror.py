@@ -84,7 +84,7 @@ def get_name(uuid):
     raise MojangError("session server did not return a result")
 
 
-@app.route("/uuid")
+@app.route("/turt2live-uuid-mirror")
 def uuid_api():
     if 'check' in request.args:
         if 'minutes' in request.args:
