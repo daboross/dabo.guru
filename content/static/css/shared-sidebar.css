@@ -53,7 +53,7 @@
     display: block;
 }
 
-.navigation {
+.navigation > * {
     font-family: Arbutus, serif;
 }
 
