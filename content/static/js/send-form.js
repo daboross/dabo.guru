@@ -2,16 +2,16 @@ function sendSuccess(data, textStatus, jqXHR) {
     var $value = $("#send-value");
     $value.show();
     if (textStatus === "success") {
-        $value.html("Success!")
+        $value.html("Success!");
     } else {
-        $value.html("Error " + jqXHR.status + "!")
+        $value.html("Error " + data.statusText + "!");
     }
 }
 
 function sendFail(data, textStatus, jqXHR) {
     var $value = $("#send-value");
     $value.show();
-    $value.html("Failure: " + textStatus);
+    $value.html("Failure: " + textStatus + ":" + jqXHR.textStatus + ":" + data);
 }
 
 function sendData() {
