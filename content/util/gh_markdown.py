@@ -7,19 +7,18 @@ from markupsafe import Markup
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+from pygments.util import ClassNotFound
 
 
 class HighlighterRenderer(misaka.HtmlRenderer):
     def blockcode(self, text, lang):
         if not lang:
-            return '\n<pre><code>{}</code></pre>\n'.format(
-                h.escape_html(text.strip()))
+            get_lexer_by_name("text")
 
         try:
             lexer = get_lexer_by_name(lang, stripall=True)
         except ClassNotFound:
-            return '\n<pre><code>{}</code></pre>\n'.format(
-                h.escape_html(text.strip()))
+            lexer = get_lexer_by_name("text")
 
         formatter = HtmlFormatter()
 
