@@ -30,12 +30,10 @@ class HighlighterRenderer(misaka.HtmlRenderer):
 
 # And use the renderer
 renderer = HighlighterRenderer(flags=misaka.HTML_ESCAPE)
-md = misaka.Markdown(
-    renderer,
-    extensions=('tables', 'fenced-code', 'autolink', 'underline', 'no-intra-emphasis',
-                'highlight', 'disable-indented-code', 'space-headers')
-
-)
+md = misaka.Markdown(renderer, extensions=(
+    'tables', 'fenced-code', 'autolink', 'underline', 'no-intra-emphasis',
+    'highlight', 'disable-indented-code', 'space-headers'
+))
 
 
 def markdown(text):
