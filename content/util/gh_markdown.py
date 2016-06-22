@@ -31,9 +31,10 @@ class HighlighterRenderer(misaka.HtmlRenderer):
 # And use the renderer
 renderer = HighlighterRenderer(flags=misaka.HTML_ESCAPE)
 md = misaka.Markdown(
-    renderer, extensions=
-    misaka.EXT_FENCED_CODE | misaka.EXT_NO_INTRA_EMPHASIS | misaka.EXT_TABLES | misaka.EXT_AUTOLINK |
-    misaka.EXT_SPACE_HEADERS | misaka.EXT_STRIKETHROUGH | misaka.EXT_SUPERSCRIPT
+    renderer,
+    extensions=('tables', 'fenced-code', 'autolink', 'underline', 'no-intra-emphasis',
+                'highlight', 'disable-indented-code', 'space-headers')
+
 )
 
 
