@@ -72,6 +72,7 @@ def load_cached(filename, url_path):
 @app.route("/projects/<project>/", defaults={"page": ""})
 @app.route("/projects/<project>/<path:page>")
 def serve_markdown(project, page):
+    print("{}, {}".format(project, page))
     project_basedir = os.path.join(root_path, project)
     if not os.path.exists(project_basedir):
         return render_template("markdown-404.html", project=project), 404

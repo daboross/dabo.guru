@@ -24,9 +24,6 @@ class HighlighterRenderer(misaka.HtmlRenderer):
 
         return highlight(text, lexer, formatter)
 
-    def table(self, header, body):
-        return '<table class="table">\n' + header + '\n' + body + '\n</table>'
-
 
 # And use the renderer
 renderer = HighlighterRenderer(flags=misaka.HTML_ESCAPE)
