@@ -1,11 +1,12 @@
 {
+	"subprocess_python_interpreter": "/home/webservices/python-environments/dabo.guru/bin/python3"
     "pushbullet": {
         "api-key": "xxx"
     },
     "github": {
         "api-key-here": {
-            "url": "https://github.com/SkyWars/SkyWars.git",
-            "name": "skywars",
+            "url": "https://github.com/username/repository.git",
+            "name": "url_path_name",
             "markdown_dir": "docs/skywars/"
         }
     }

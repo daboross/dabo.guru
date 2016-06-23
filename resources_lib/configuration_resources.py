@@ -14,7 +14,7 @@ pushbullet = None
 
 
 def set_working_directory():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def configure_logger(debug_file):

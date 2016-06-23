@@ -11,10 +11,13 @@ repo_path = Path("github").resolve()
 markdown_root = Path("markdown").resolve()
 
 
-def update_repo(repo_config, rebuild_static=True):
+def update_repo(repo_config, static_rebuild_python_executable=None):
     """
     :param repo_config: A configuration with a "name", "url" and "markdown_dir"
-    :param rebuild_static: If true, run Frozen-Flask in a subprocess before returning
+    :param static_rebuild_python_executable: The python executable to run a subprocess to rebuild static with. If None,
+            static content will simply not be rebuilt.
+    :type repo_config: dict[str, str]
+    :type static_rebuild_python_executable: str
     """
     name = repo_config["name"]
     url = repo_config["url"]
@@ -43,22 +46,29 @@ def update_repo(repo_config, rebuild_static=True):
     except Exception:
         logging.exception("Exception updating repository")
     else:
-        if rebuild_static:
+        if static_rebuild_python_executable is not None:
             build_file = str(Path("build.py").resolve())
             try:
-                subprocess.check_output(["python3", build_file, "--repo", name])
+                subprocess.check_output([static_rebuild_python_executable, build_file, "--repo", name])
             except subprocess.CalledProcessError as err:
-                logging.warning("Error updating static repository documentation files: Output: {}", err.output)
+                output = err.output.decode()
+                logging.warning("Error updating static repository documentation files: Output: {}", output)
                 try:
                     push = configuration_resources.get_pushbullet()
-                    push.push_note("Couldn't update documentation", err.output)
+                    push.push_note("Couldn't update documentation", output)
                 except Exception:
                     logging.exception("Exception sending exception note.")
 
 
-def update_all_repositories(config, rebuild_static):
+def update_all_repositories(config, static_rebuild_python_executable=None):
+    """
+    :param static_rebuild_python_executable: The python executable to run a subprocess to rebuild static with. If None,
+            static content will simply not be rebuilt.
+    :type config: dict[str, dict[str, dict[str, str]]]
+    :type static_rebuild_python_executable: str
+    """
     for repo_config in config["github"].values():
-        update_repo(repo_config, rebuild_static=rebuild_static)
+        update_repo(repo_config, static_rebuild_python_executable=static_rebuild_python_executable)
 
 
 def get_possible_pages_for_frozen_flask(repo):

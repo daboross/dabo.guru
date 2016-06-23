@@ -1,8 +1,11 @@
 import sys
 
 import os
+import warnings
 import webassets
-from flask_frozen import Freezer
+from flask_frozen import Freezer, MissingURLGeneratorWarning
+
+sys.modules["uwsgi"] = {"mule_msg": lambda x: None, "mule_get_msg": lambda: None}
 
 from content import app, assets, config
 from resources_lib import documentation
@@ -40,9 +43,11 @@ def build_pages():
     freezer.register_generator(markdown_url_generator)
     freezer.register_generator(lambda: ("/favicon.ico",))
     print("Updating documentation")
-    documentation.update_all_repositories(config, False)
+    documentation.update_all_repositories(config)
     print("Freezing")
-    freezer.freeze()
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=MissingURLGeneratorWarning)
+        freezer.freeze()
 
 
 def build_individual_repositories(repository_list):
@@ -55,7 +60,9 @@ def build_individual_repositories(repository_list):
             return documentation.get_possible_pages_for_frozen_flask(repository)
 
         freezer.register_generator(url_generator)
-    freezer.freeze()
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=MissingURLGeneratorWarning)
+        freezer.freeze()
 
 
 def main():
@@ -93,4 +100,5 @@ def main():
         build_individual_repositories(repositories)
 
 
-main()
+if __name__ == "__main__":
+    main()
