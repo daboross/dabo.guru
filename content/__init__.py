@@ -5,6 +5,7 @@ import sys
 
 from flask import Flask
 import jinja2
+from redis import StrictRedis
 from webassets.env import Environment
 
 from content.util import htmlmin_filter, gh_markdown, webassets_integration
@@ -67,6 +68,7 @@ app.jinja_loader = jinja2.FileSystemLoader([
 ])
 
 push = PushBullet(config["pushbullet"]["api-key"])
+redis = StrictRedis()
 
 assets = Environment(os.path.abspath(os.path.join("static", "assets")), "assets/")
 assets.append_path(app.static_folder, "/")

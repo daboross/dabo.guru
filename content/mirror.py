@@ -7,7 +7,7 @@ from flask import request
 from redis.client import StrictRedis
 import requests
 
-from content import app
+from content import app, redis
 
 a = 3
 # How long to keep logs for, in seconds
@@ -15,7 +15,6 @@ keep_log_for = 600
 # How many requests per 10 minutes
 maximum_requests = 600
 requests_key = "dabo.guru:mirror:log"
-redis = StrictRedis()
 username_url = "https://sessionserver.mojang.com/session/minecraft/profile/"
 uuid_url = "https://api.mojang.com/profiles/minecraft"
 
@@ -91,7 +90,7 @@ def uuid_api():
             try:
                 minutes = float(request.args['minutes'])
             except ValueError:
-                return 'error: invalid arguments'
+                return 'error: invalid arguments', 400
             handled = get_handled_requests(60 * minutes)
         else:
             handled = get_handled_requests()
