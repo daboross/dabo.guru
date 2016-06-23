@@ -4,7 +4,8 @@ import os
 import webassets
 from flask_frozen import Freezer
 
-from content import app, assets, documentation_update
+from content import app, assets, config
+from resources_lib import documentation
 
 
 def build_assets():
@@ -24,7 +25,7 @@ def no_argument_rules_urls_with_ignore():
 
 
 def markdown_url_generator():
-    return documentation_update.get_all_possible_pages_for_frozen_flask()
+    return documentation.get_all_possible_pages_for_frozen_flask()
 
 
 def build_pages():
@@ -39,7 +40,7 @@ def build_pages():
     freezer.register_generator(markdown_url_generator)
     freezer.register_generator(lambda: ("/favicon.ico",))
     print("Updating documentation")
-    documentation_update.update_all(False)
+    documentation.update_all_repositories(config, False)
     print("Freezing")
     freezer.freeze()
 
@@ -51,7 +52,7 @@ def build_individual_repositories(repository_list):
     freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
     for repository in repository_list:
         def url_generator():
-            return documentation_update.get_possible_pages_for_frozen_flask(repository)
+            return documentation.get_possible_pages_for_frozen_flask(repository)
 
         freezer.register_generator(url_generator)
     freezer.freeze()
