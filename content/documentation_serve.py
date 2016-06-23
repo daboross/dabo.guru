@@ -1,8 +1,8 @@
-import codecs
 import logging
+
+import codecs
 import os
 import re
-
 from flask import render_template
 
 from content import app
@@ -15,7 +15,7 @@ cache = {}
 
 title_regex = re.compile("^([^\n]+)\n[=-]+|!\\[([^\\]]+)\\]")
 
-discus_format = """<div id="disqus_thread"></div>
+disqus_format = """<div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
         this.page.url = "https://dabo.guru/{url_path}";
@@ -35,8 +35,8 @@ discus_format = """<div id="disqus_thread"></div>
 
 
 def parse_discus(contents, url_path):
-    if "[discus-thread]" in contents:
-        return contents.replace("[discus-thread]", discus_format.replace("{url_path}", url_path))
+    if "[disqus-thread]" in contents:
+        return contents.replace("[disqus-thread]", disqus_format.replace("{url_path}", url_path))
     else:
         return contents
 
