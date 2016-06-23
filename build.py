@@ -41,7 +41,7 @@ def build_pages():
     freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
     freezer.register_generator(no_argument_rules_urls_with_ignore)
     freezer.register_generator(markdown_url_generator)
-    freezer.register_generator(lambda: ("/favicon.ico",))
+    freezer.register_generator(lambda: ("/favicon.ico", "/favicon.png", "/logo/SkyWars.png"))
     print("Updating documentation")
     documentation.update_all_repositories(config)
     print("Freezing")
