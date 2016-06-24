@@ -10,6 +10,12 @@ sys.modules["uwsgi"] = {"mule_msg": lambda x: None, "mule_get_msg": lambda: None
 from content import app, assets, config
 from resources_lib import documentation
 
+completely_static_files = [
+	"/favicon.ico",
+    "/favicon.png",
+    "/logo/SkyWars.png",
+    "/robots.txt",
+]
 
 def build_assets():
     for bundle in assets:
@@ -41,7 +47,7 @@ def build_pages():
     freezer = Freezer(app=app, with_static_files=False, with_no_argument_rules=False, log_url_for=True)
     freezer.register_generator(no_argument_rules_urls_with_ignore)
     freezer.register_generator(markdown_url_generator)
-    freezer.register_generator(lambda: ("/favicon.ico", "/favicon.png", "/logo/SkyWars.png"))
+    freezer.register_generator(lambda: completely_static_files)
     print("Updating documentation")
     documentation.update_all_repositories(config)
     print("Freezing")
