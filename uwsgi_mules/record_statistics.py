@@ -35,6 +35,8 @@ redis = StrictRedis()
 def record_record():
     plugin = "skywars"
 
+    logging.info("Saving record for plugin {}".format(plugin))
+
     current_time = int(time.time())
 
     total_player_count = 0
