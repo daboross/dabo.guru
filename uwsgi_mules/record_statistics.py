@@ -2,6 +2,7 @@ import logging
 import time
 import traceback
 
+from apscheduler.schedulers.blocking import BlockingScheduler
 from collections import Counter
 from redis import StrictRedis
 
@@ -73,8 +74,9 @@ def record_record():
     record_list_key = RECORD_LIST.format(plugin)
     data_pipeline.rpush(record_list_key, current_time)
 
-    plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
-    data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
+    if plugin_version_to_count:
+        plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
+        data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
 
     total_players_key = RECORD_TOTAL_PLAYERS.format(plugin, current_time)
     data_pipeline.set(total_players_key, total_player_count)
@@ -90,9 +92,15 @@ def record_record():
     data_pipeline.execute()
 
 
+def recording_loop():
+    sched = BlockingScheduler()
+    sched.add_job(record_record, "cron", minute=0)
+    sched.start()
+
+
 def main():
     try:
-        record_record()
+        recording_loop()
     except Exception:
         logging.exception("Exception!")
         try:

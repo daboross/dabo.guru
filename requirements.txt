@@ -7,4 +7,5 @@ cssmin
 redis
 webassets
 frozen-flask
+apscheduler
 git+https://github.com/dabeaz/ply#egg=ply
