@@ -76,9 +76,11 @@ def record_record():
     record_list_key = RECORD_LIST.format(plugin)
     data_pipeline.rpush(record_list_key, current_time)
 
-    if plugin_version_to_count:
-        plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
-        data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
+    if not plugin_versions:
+        return
+
+    plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
+    data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
 
     total_players_key = RECORD_TOTAL_PLAYERS.format(plugin, current_time)
     data_pipeline.set(total_players_key, total_player_count)
