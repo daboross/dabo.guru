@@ -45,7 +45,6 @@ def record_record():
     plugin_version_to_server_version_plugin_counts = dict()
 
     expire_pipeline = redis.pipeline(transaction=False)
-    data_pipeline = redis.pipeline(transaction=True)
 
     for plugin_version in redis.smembers(PLUGIN_VERSION_LIST.format(plugin)):
         plugin_count = 0
@@ -74,10 +73,13 @@ def record_record():
             plugin_versions.add(plugin_version)
 
     record_list_key = RECORD_LIST.format(plugin)
-    data_pipeline.rpush(record_list_key, current_time)
 
     if not plugin_versions:
+        expire_pipeline.execute()
         return
+
+    data_pipeline = redis.pipeline(transaction=True)
+    data_pipeline.rpush(record_list_key, current_time)
 
     plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
     data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
