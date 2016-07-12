@@ -1,8 +1,8 @@
+import logging
 from pathlib import Path
 
 # Not an actual python module, but produced by uwsgi
 # documentation: http://uwsgi-docs.readthedocs.io/en/latest/PythonModule.html
-import logging
 import uwsgi
 
 from resources_lib import configuration_resources, documentation
