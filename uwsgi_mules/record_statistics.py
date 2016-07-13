@@ -2,12 +2,14 @@ import logging
 import time
 import traceback
 
+import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from collections import Counter
 from redis import StrictRedis
 
 from resources_lib import configuration_resources
 
+# TODO: Make all of these pure byte format strings once python3.5 (with '%' formatting for bytes) is widely available.
 # (plugin_name): set(plugin_version)
 PLUGIN_VERSION_LIST = "statistics:live:{}:versions"
 # (plugin_name, plugin_version): zset(server_guid: expiration_time)
@@ -47,38 +49,37 @@ def record_record():
     expire_pipeline = redis.pipeline(transaction=False)
 
     for plugin_version in redis.smembers(PLUGIN_VERSION_LIST.format(plugin)):
+        plugin_version = plugin_version.decode('utf-8')
         plugin_count = 0
         server_version_to_plugin_count = Counter()
-        servers_to_remove = set()
 
         gte_key = VERSION_SERVER_HASH.format(plugin, plugin_version)
 
-        guid_to_expiration = redis.hgetall(gte_key)
-        for (guid, expiration) in guid_to_expiration:
-            if expiration > current_time:
-                servers_to_remove.add(guid)
-                continue
+        # expire things:
+        expire_pipeline.zremrangebyscore(gte_key, '-inf', '({}'.format(current_time))
 
+        guid_list = redis.zrangebyscore(gte_key, current_time, '+inf')
+        for guid in guid_list:
+            guid = guid.decode('utf-8')
             plugin_count += 1
-
             sd_key = SERVER_DATA_SET.format(plugin, guid)
             server_data = redis.hgetall(sd_key)
-            total_player_count += server_data["players"]
-            server_version_to_plugin_count[server_data["server"]] += 1
-        if servers_to_remove:
-            expire_pipeline.hdel(gte_key, *servers_to_remove)
+            total_player_count += int(server_data[b"players"].decode('ascii'))
+            server_version_to_plugin_count[server_data[b"server"].decode('utf-8')] += 1
+
         if plugin_count > 0:
             plugin_version_to_count[plugin_version] = plugin_count
             plugin_version_to_server_version_plugin_counts[plugin_version] = server_version_to_plugin_count
             plugin_versions.add(plugin_version)
 
-    record_list_key = RECORD_LIST.format(plugin)
+    expire_pipeline.execute()
 
     if not plugin_versions:
-        expire_pipeline.execute()
         return
 
     data_pipeline = redis.pipeline(transaction=True)
+
+    record_list_key = RECORD_LIST.format(plugin)
     data_pipeline.rpush(record_list_key, current_time)
 
     plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
@@ -90,15 +91,15 @@ def record_record():
     plugin_versions_key = RECORD_PLUGIN_VERSIONS.format(plugin, current_time)
     data_pipeline.rpush(plugin_versions_key, plugin_versions)
 
-    for (plugin_version, server_version_to_plugin_count) in plugin_version_to_server_version_plugin_counts:
+    for (plugin_version, server_version_to_plugin_count) in plugin_version_to_server_version_plugin_counts.items():
         svpc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, current_time, plugin_version)
         data_pipeline.hmset(svpc_key, server_version_to_plugin_count)
 
-    expire_pipeline.execute()
     data_pipeline.execute()
 
 
 def recording_loop():
+    logging.info("Starting recording loop")
     sched = BlockingScheduler()
     sched.add_job(record_record, "cron", minute=0)
     sched.start()
@@ -117,4 +118,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--record-now" in sys.argv:
+        record_record()
+    else:
+        main()

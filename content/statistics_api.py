@@ -23,14 +23,15 @@ RECORD_PLUGIN_VERSIONS = "statistics:{}:record:{}:versions"
 RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server-version-counts"
 
 
-@app.route("/statistics/v1/<plugin>/post/", methods=["POST"])
-def statistics_record(plugin):
+@app.route("/statistics/v1/skywars/post", methods=["POST"])
+def statistics_record():
+    plugin = "skywars"
     if request.content_length > 512:
         return """Error: too large of a message""", 400
     json = request.get_json()
     if json is None:
-        logging.debug("Non-json data sent to plugin/skywars/post: {}", request.get_data().decode())
-        return
+        logging.info("Non-json data sent to plugin/skywars/post: {}", request.get_data().decode())
+        return """Error: invalid data""", 400
 
     guid = json["guid"]
     plugin_version = json["plugin_version"]
@@ -39,8 +40,8 @@ def statistics_record(plugin):
 
     if (guid is None or plugin_version is None or player_count is None
         or server_version is None or not isinstance(player_count, int)):
-        logging.debug("Invalid request to skywars statistics: {}", json)
-        return
+        logging.info("Invalid request to skywars statistics: {}", json)
+        return """Error: invalid data""", 400
 
     pipe = redis.pipeline(transaction=True)
 
@@ -55,3 +56,4 @@ def statistics_record(plugin):
     pipe.expire(data_key, 2 * 61 * 60)  # one minute after key above expires
 
     pipe.execute()
+    return """Data successfully submitted""", 200
