@@ -8,3 +8,93 @@ run on uwsgi, and is proxied through by nginx whenever a file isn't found in the
 
 The static content found in the `static/` folder after running `build.py` is also copied over and run at
 http://daboross.net, which is a copy of https://dabo.guru hosted by github pages.
+
+### Example Configurations
+
+These are the configurations used in the actual website, dabo.guru, and can also serve as example configurations if you would want to run this repository yourself.
+
+These assume this repository is cloned into `/var/www/dabo.guru`, and a virtualenv environment with the required dependencies has been installed to `/var/www/envs/dabo.guru`.
+
+These configurations also assume that you've run `build.py` to manually build all static content, and you will re-run it after updating the repository.
+
+In debian, configuration for uwsgi is stored in `/etc/uwsgi/apps-available` with symlinks to `/etc/uwsgi/apps-enabled`.
+
+Here's the example uwsgi configuration (`/etc/uwsgi/apps-available/01-dabo.guru.ini`):
+
+```ini
+[uwsgi]
+socket = 127.0.0.1:3031
+wsgi-file = /var/www/dabo.guru/dynamic.wsgi
+virtualenv = /var/www/envs/dabo.guru/
+mule = /var/www/dabo.guru/uwsgi_mules/documentation_update.py
+mule = /var/www/dabo.guru/uwsgi_mules/record_statistics.py
+callable = application
+uid = azd
+gid = azd
+# Don't give write permission to group or other
+umask = 022
+# Start initially with no workers, then start a maximum of 2
+workers = 2
+cheap = true
+cheaper = 1
+cheaper-initial = 1
+cheaper-step = 1
+```
+
+To go along with this, you might want a nginx configuration akin to the following (`/etc/nginx/sites-available/01-dabo.guru`):
+
+```nginx
+# Redirect all https requests for www.dabo.guru to dabo.guru
+server {
+    listen ...:443 ssl;
+    listen [...]:443 ssl;
+
+    ssl_certificate ...;
+    ssl_certificate_key ...;
+
+    server_name www.dabo.guru;
+
+    return 301 $scheme://dabo.guru$request_uri;
+}
+
+# Redirect all http requests for dabo.guru to https
+server {
+    listen ...:80;
+    listen [...]:80;
+
+    server_name dabo.guru;
+
+    return 301 https://dabo.guru$request_uri;
+}
+
+# Handle https requests for dabo.guru
+server {
+    listen ...:443 ssl;
+    listen [...]:443 ssl;
+
+    ssl_certificate ...;
+    ssl_certificate_key ...;
+
+    server_name dabo.guru;
+
+    root /var/www/dabo.guru/static/;
+
+    # Serve assets only from generated files, and include max expire time.
+    location /assets/ {
+        expires max;
+        try_files $uri $uri/index.html =404;
+    }
+
+    # Redirect all other not-found content to the uwsgi app.
+    location / {
+        try_files $uri $uri/index.html @dynamic_content;
+    }
+
+    location @dynamic_content {
+        include uwsgi_params;
+        uwsgi_pass 127.0.0.1:3031;
+    }
+}
+```
+
+The above is close to, but not exactly the actual used nginx configuration. The actual configuration has the personal information not-elided, and includes url-redirects for some other services also hosted on https://dabo.guru.
