@@ -5,6 +5,7 @@ from flask import request
 
 from content import app, redis
 
+PLUGIN_SET = "statistics:plugins"
 # (plugin_name): set(plugin_version)
 PLUGIN_VERSION_LIST = "statistics:live:{}:versions"
 # (plugin_name, plugin_version): zset(server_guid: expiration_time)
@@ -23,9 +24,8 @@ RECORD_PLUGIN_VERSIONS = "statistics:{}:record:{}:versions"
 RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server-version-counts"
 
 
-@app.route("/statistics/v1/skywars/post", methods=["POST"])
-def statistics_record():
-    plugin = "skywars"
+@app.route("/statistics/v1/<plugin>/post", methods=["POST"])
+def statistics_record(plugin):
     if request.content_length > 512:
         return """Error: too large of a message""", 400
     json = request.get_json()
@@ -45,6 +45,7 @@ def statistics_record():
 
     pipe = redis.pipeline(transaction=True)
 
+    pipe.sadd(PLUGIN_SET, plugin)
     pipe.sadd(PLUGIN_VERSION_LIST.format(plugin), plugin_version)
 
     servers_hash_key = VERSION_SERVER_HASH.format(plugin, plugin_version)

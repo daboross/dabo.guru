@@ -1,8 +1,8 @@
 import logging
+import sys
 import time
 import traceback
 
-import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from collections import Counter
 from redis import StrictRedis
@@ -10,6 +10,7 @@ from redis import StrictRedis
 from resources_lib import configuration_resources
 
 # TODO: Make all of these pure byte format strings once python3.5 (with '%' formatting for bytes) is widely available.
+PLUGIN_SET = "statistics:plugins"
 # (plugin_name): set(plugin_version)
 PLUGIN_VERSION_LIST = "statistics:live:{}:versions"
 # (plugin_name, plugin_version): zset(server_guid: expiration_time)
@@ -34,9 +35,12 @@ push = configuration_resources.get_pushbullet()
 redis = StrictRedis()
 
 
-def record_record():
-    plugin = "skywars"
+def record_records():
+    for plugin in redis.smembers(PLUGIN_SET):
+        record_record(plugin)
 
+
+def record_record(plugin):
     logging.info("Saving record for plugin {}".format(plugin))
 
     current_time = int(time.time())
@@ -101,7 +105,7 @@ def record_record():
 def recording_loop():
     logging.info("Starting recording loop")
     sched = BlockingScheduler()
-    sched.add_job(record_record, "cron", minute=0)
+    sched.add_job(record_records, "cron", minute=0)
     sched.start()
 
 
@@ -119,6 +123,6 @@ def main():
 
 if __name__ == "__main__":
     if "--record-now" in sys.argv:
-        record_record()
+        record_records()
     else:
         main()
