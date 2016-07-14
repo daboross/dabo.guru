@@ -43,6 +43,8 @@ def statistics_record(plugin):
         logging.info("Invalid request to skywars statistics: {}", json)
         return """Error: invalid data""", 400
 
+    plugin = plugin.lower().strip()
+
     pipe = redis.pipeline(transaction=True)
 
     pipe.sadd(PLUGIN_SET, plugin)
