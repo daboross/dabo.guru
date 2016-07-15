@@ -2,7 +2,7 @@
 {% block title %}Recorded statistics for {{ plugin }} - plugin-statistics{% endblock %}
 {% block body %}
     {% filter markdown %}
-        ### {{ plugin }} Statistics
+        ### {{ plugin }} statistics
 
         This is mostly a stand-in interface to view data while the actual one is being built. All data
         which is permanently stored about the plugin {{ plugin }} is available here, but it isn't in the
@@ -17,15 +17,14 @@
         older than two hours expires and is deleted.
 
         {% for record in records %}
-            ---
+            ==============================
 
-            Record #{{ record["number"] }}: {{ record["date"] }}
+            {{ record["date"] }}
 
             {{ record["total_servers"] }} servers, with {{ record["total_players"] }} online players.
 
-            Version specific information:
             {% for version in record["plugin_versions"] %}
-
+                ------------------------------
                 Version {{ version["version"] }}: {{ version["server_count"] }} servers
 
                 Server Version Statistics:
@@ -34,6 +33,7 @@
                     {{ server_version }}: {{ server_count }}
                 {% endfor %}
             {% endfor %}
+            ------------------------------
         {% endfor %}
     {% endfilter %}
 {% endblock %}
