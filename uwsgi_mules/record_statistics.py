@@ -37,7 +37,7 @@ redis = StrictRedis()
 
 def record_records():
     for plugin in redis.smembers(PLUGIN_SET):
-        record_record(plugin)
+        record_record(plugin.decode('utf-8'))
 
 
 def record_record(plugin):
