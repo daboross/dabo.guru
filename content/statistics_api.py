@@ -83,7 +83,7 @@ def get_statistics(plugin):
         return """No data gathered for plugin '{}'""".format(plugin)
 
     first_record = page * 10
-    last_record = first_record + 10
+    last_record = first_record + 9
 
     rl_key = RECORD_LIST.format(plugin)
     record_name_list = redis.lrange(rl_key, first_record, last_record)
@@ -97,12 +97,14 @@ def get_statistics(plugin):
 
     total_record_count = redis.llen(rl_key)
 
+    prev_page_available = page > 0
+    next_page_available = total_record_count > last_record + 1
+
     record_list = []
 
     for index, record in enumerate(record_name_list):
         record = record.decode('utf-8')
         record_time = datetime.fromtimestamp(int(record)).strftime("%b %d %Y %H:%M")
-        record_number = total_record_count - (first_record + index)
 
         total_players = int(redis.get(RECORD_TOTAL_PLAYERS.format(plugin, record)).decode('utf-8'))
         total_servers = 0
@@ -125,11 +127,15 @@ def get_statistics(plugin):
                 "server_version_counts": server_version_counts,
             })
         record_list.append({
-            "number": record_number,
             "date": record_time,
             "total_servers": total_servers,
             "total_players": total_players,
             "plugin_versions": version_list
         })
 
-    return render_template("display-statistics.html", plugin=plugin, records=record_list)
+    return render_template("display-statistics.html",
+                           plugin=plugin,
+                           records=record_list,
+                           page_number=page,
+                           next_page_available=next_page_available,
+                           prev_page_available=prev_page_available)
