@@ -1,0 +1,45 @@
+{% extends "simple-layout.html" %}
+{% block title %}Recorded statistics for {{ plugin }} - plugin-statistics{% endblock %}
+{% block body %}
+    {% filter markdown %}
+        ###{{ plugin }} Statistics
+
+        This is mostly a stand-in interface to view data while the actual one is being built. All data
+        which is permanently stored about the plugin {{ plugin }} is available here, but it isn't in the
+        nicest format.
+
+        This page contains a list of records for {{ plugin }}.
+
+        Records aren't directly the data reported by minecraft servers, but rather an aggregation of
+        all live-reported data received up to two hours before the record.
+
+        Records are made every hour, on the hour, and when each record is made all live-reported data
+        older than two hours expires and is deleted.
+
+        {% for record in records %}
+            ---
+
+            Record #{{ record["number"] }}
+
+            Date: {{ record["date"] }}
+
+            Total servers running {{ plugin }}: {{ record["total_servers"] }}
+
+            Total players online on those servers: {{ record["total_players"] }}
+
+            Version specific information:
+            {% for version in record["plugin_versions"] %}
+
+                Version {{ version["version"] }}:
+
+                \tTotal servers running {{ plugin }} v{{ version["version"] }}: {{ version["server_count"] }}
+
+                \tServers of each server version running this plugin version:
+                {% for server_version, server_count in version["server_version_counts"].items() %}
+
+                    \t\t{{ server_version }}: {{ server_count }}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    {% endfilter %}
+{% endblock %}

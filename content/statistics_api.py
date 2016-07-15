@@ -1,6 +1,8 @@
 import logging
 import time
+from datetime import datetime
 
+from flask import render_template
 from flask import request
 
 from content import app, redis
@@ -25,7 +27,7 @@ RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server
 
 
 @app.route("/statistics/v1/<plugin>/post", methods=["POST"])
-def statistics_record(plugin):
+def post_statistics(plugin):
     if request.content_length > 512:
         return """Error: too large of a message""", 400
     json = request.get_json()
@@ -59,4 +61,75 @@ def statistics_record(plugin):
     pipe.expire(data_key, 2 * 61 * 60)  # one minute after key above expires
 
     pipe.execute()
-    return """Data successfully submitted""", 200
+    return """Data successfully submitted"""
+
+
+@app.route("/statistics/<plugin>/", methods=["POST"])
+def get_statistics(plugin):
+    if "page" in request.args:
+        try:
+            page = int(request.args["page"])
+        except ValueError:
+            page = 0
+        else:
+            if page < 0:
+                page = 0
+    else:
+        page = 0
+
+    plugin = plugin.lower().strip()
+
+    if not redis.sismember(PLUGIN_SET, plugin):
+        return """No data gathered for plugin '{}'""".format(plugin)
+
+    first_record = page * 10
+    last_record = first_record + 10
+
+    rl_key = RECORD_LIST.format(plugin)
+    record_name_list = redis.lrange(rl_key, first_record, last_record)
+
+    while not record_name_list:
+        if page <= 0:
+            return """Plugin '{}' known, but no records have yet been generated.""".format(plugin)
+        else:
+            page = page - 1
+            record_name_list = redis.lrange(rl_key, first_record, last_record)
+
+    total_record_count = redis.llen(rl_key)
+
+    record_list = []
+
+    for index, record in enumerate(record_name_list):
+        record = record.decode('utf-8')
+        record_time = datetime.fromtimestamp(int(record)).strftime("%b %d %Y %H:%M")
+        record_number = total_record_count - (first_record + index)
+
+        total_players = redis.get(RECORD_TOTAL_PLAYERS.format(plugin, record))
+        total_servers = 0
+        version_list = []
+
+        plugin_version_counts = redis.hgetall(RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, record))
+
+        for version, server_count in sorted(plugin_version_counts.items(), key=lambda i: i[0]):
+            version = version.decode('utf-8')
+            server_count = int(server_count.decode('utf-8'))
+            total_servers += server_count
+
+            svc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, record, version)
+            server_version_counts = {key.decode('utf-8'): int(value.decode('utf-8'))
+                                     for key, value in redis.hgetall(svc_key).items()}
+
+            version_list.append({
+                "version": version,
+                "server_count": server_count,
+                "server_version_counts": server_version_counts,
+            })
+        record_list.append({
+            "number": record_number,
+            "date": record_time,
+            "total_servers": total_servers,
+            "total_players": total_players,
+            "plugin_versions": version_list
+        })
+
+    return render_template("display-statistics.html", plugin=plugin, records=record_list)

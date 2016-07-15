@@ -93,7 +93,7 @@ def record_record(plugin):
     data_pipeline.set(total_players_key, total_player_count)
 
     plugin_versions_key = RECORD_PLUGIN_VERSIONS.format(plugin, current_time)
-    data_pipeline.rpush(plugin_versions_key, plugin_versions)
+    data_pipeline.lpush(plugin_versions_key, plugin_versions)
 
     for (plugin_version, server_version_to_plugin_count) in plugin_version_to_server_version_plugin_counts.items():
         svpc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, current_time, plugin_version)
