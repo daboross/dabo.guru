@@ -25,7 +25,8 @@
 
             {% for version in record["plugin_versions"] %}
                 ------------------------------
-                Version {{ version["version"] }}: {{ version["server_count"] }} servers
+
+                {{ version["version"] }}: {{ version["server_count"] }} servers
 
                 Server Version Statistics:
                 {% for server_version, server_count in version["server_version_counts"].items() %}
