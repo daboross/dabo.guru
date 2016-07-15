@@ -64,7 +64,7 @@ def post_statistics(plugin):
     return """Data successfully submitted"""
 
 
-@app.route("/statistics/<plugin>/", methods=["POST"])
+@app.route("/statistics/<plugin>/")
 def get_statistics(plugin):
     if "page" in request.args:
         try:
