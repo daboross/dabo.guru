@@ -104,7 +104,7 @@ def get_statistics(plugin):
         record_time = datetime.fromtimestamp(int(record)).strftime("%b %d %Y %H:%M")
         record_number = total_record_count - (first_record + index)
 
-        total_players = redis.get(RECORD_TOTAL_PLAYERS.format(plugin, record))
+        total_players = int(redis.get(RECORD_TOTAL_PLAYERS.format(plugin, record)).decode('utf-8'))
         total_servers = 0
         version_list = []
 
