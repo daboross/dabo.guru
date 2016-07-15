@@ -21,17 +21,21 @@
 
             {{ record["date"] }}
 
-            {{ record["total_servers"] }} servers, with {{ record["total_players"] }} online players.
+            {{ record["total_servers"] }} {% if record["total_servers"] == 1 %}server{% else %}servers{% endif %}, with
+            {{ record["total_players"] }} online
+            {% if record["total_players"] == 1 %}player{% else %}players{% endif %}.
 
             {% for version in record["plugin_versions"] %}
                 ------------------------------
 
-                {{ version["version"] }}: {{ version["server_count"] }} servers
+                {{ version["version"] }}: {{ version["server_count"] }}
+                {% if version["server_count"] == 1 %}server{% else %}servers{% endif %}
 
                 Server Version Statistics:
                 {% for server_version, server_count in version["server_version_counts"].items() %}
 
                     {{ server_version }}: {{ server_count }}
+                    {% if server_count == 1 %}server{% else %}servers{% endif %}
                 {% endfor %}
             {% endfor %}
             ------------------------------
