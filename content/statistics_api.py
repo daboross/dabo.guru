@@ -33,7 +33,7 @@ def statistics_record(plugin):
         logging.info("Non-json data sent to plugin/skywars/post: {}", request.get_data().decode())
         return """Error: invalid data""", 400
 
-    guid = json["guid"]
+    guid = json["instance_uuid"]
     plugin_version = json["plugin_version"]
     server_version = json["server_version"]
     player_count = json["player_count"]
