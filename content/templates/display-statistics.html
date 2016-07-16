@@ -1,56 +1,59 @@
 {% extends "simple-layout.html" %}
 {% block title %}Recorded statistics for {{ plugin }} - plugin-statistics{% endblock %}
 {% block body %}
-    {% filter markdown %}
-        ### {{ plugin }} statistics
+    <div class="container">
+        {% filter markdown %}
+            ### {{ plugin }} statistics
 
-        This is mostly a stand-in interface to view data while the actual one is being built. All data
-        which is permanently stored about the plugin {{ plugin }} is available here, but it isn't in the
-        nicest format.
+            This is mostly a stand-in interface to view data while the actual one is being built. All data
+            which is permanently stored about the plugin {{ plugin }} is available here, but it isn't in the
+            nicest format.
 
-        This page contains a list of records for {{ plugin }}.
+            This page contains a list of records for {{ plugin }}.
 
-        Records aren't directly the data reported by minecraft servers, but rather an aggregation of
-        all live-reported data received up to two hours before the record.
+            Records aren't directly the data reported by minecraft servers, but rather an aggregation of
+            all live-reported data received up to two hours before the record.
 
-        Records are made every hour, on the hour, and when each record is made all live-reported data
-        older than two hours expires and is deleted.
+            Records are made every hour, on the hour, and when each record is made all live-reported data
+            older than two hours expires and is deleted.
 
-        {% if next_page_available or prev_page_available %}
-            Records are separated into pages of ten records each.
+            {% if next_page_available or prev_page_available %}
+                Records are separated into pages of ten records each.
 
-            {% if prev_page_available %}
-                [Visit previous page]({{ "://dabo.guru/statistics/{}/?page={}".format(plugin, page - 1) }})
+                {% if prev_page_available %}
+                    [Visit previous page]({{ "?page={}".format(plugin, page - 1) }})
+                {% endif %}
+
+                {% if next_page_available %}
+                    [Visit next page]({{ "?page={}".format(plugin, page + 1) }})
+                {% endif %}
             {% endif %}
 
-            {% if next_page_available %}
-                [Visit next page]({{ "://dabo.guru/statistics/{}/?page={}".format(plugin, page + 1) }})
-            {% endif %}
-        {% endif %}
+            {% for record in records %}
+                ==============================
 
-        {% for record in records %}
-            ==============================
+                {{ record["date"] }}
 
-            {{ record["date"] }}
+                {{ record["total_servers"] }} {% if record["total_servers"] == 1 %}server{% else %}servers{% endif %},
+                with
+                {{ record["total_players"] }} online
+                {% if record["total_players"] == 1 %}player{% else %}players{% endif %}.
 
-            {{ record["total_servers"] }} {% if record["total_servers"] == 1 %}server{% else %}servers{% endif %}, with
-            {{ record["total_players"] }} online
-            {% if record["total_players"] == 1 %}player{% else %}players{% endif %}.
+                {% for version in record["plugin_versions"] %}
+                    ------------------------------
 
-            {% for version in record["plugin_versions"] %}
-                ------------------------------
+                    {{ version["version"] }}: {{ version["server_count"] }}
+                    {% if version["server_count"] == 1 %}server{% else %}servers{% endif %}
 
-                {{ version["version"] }}: {{ version["server_count"] }}
-                {% if version["server_count"] == 1 %}server{% else %}servers{% endif %}
+                    Server Version Statistics:
+                    {% for server_version, server_count in version["server_version_counts"].items() %}
 
-                Server Version Statistics:
-                {% for server_version, server_count in version["server_version_counts"].items() %}
-
-                    {{ server_version }}: {{ server_count }}
-                    {% if server_count == 1 %}server{% else %}servers{% endif %}
+                        {{ server_version }}: {{ server_count }}
+                        {% if server_count == 1 %}server{% else %}servers{% endif %}
+                    {% endfor %}
                 {% endfor %}
+                ------------------------------
             {% endfor %}
-            ------------------------------
-        {% endfor %}
-    {% endfilter %}
+        {% endfilter %}
+    </div>
 {% endblock %}
