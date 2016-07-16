@@ -2,6 +2,7 @@ import logging
 import time
 from datetime import datetime
 
+import re
 from flask import render_template
 from flask import request
 
@@ -25,6 +26,7 @@ RECORD_PLUGIN_VERSIONS = "statistics:{}:record:{}:versions"
 # (plugin_name, recorded_time, plugin_version): hash(server_version: plugin_count)
 RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server-version-counts"
 
+MINECRAFT_VERSION_RE = re.compile("\(MC: ([0-9\.]+)\)")
 
 @app.route("/statistics/v1/<plugin>/post", methods=["POST"])
 def post_statistics(plugin):
@@ -45,6 +47,8 @@ def post_statistics(plugin):
         logging.info("Invalid request to skywars statistics: {}", json)
         return """Error: invalid data""", 400
 
+    server_version = parse_server_version(server_version)
+
     plugin = plugin.lower().strip()
 
     pipe = redis.pipeline(transaction=True)
@@ -63,6 +67,13 @@ def post_statistics(plugin):
     pipe.execute()
     return """Data successfully submitted"""
 
+
+def parse_server_version(version):
+    match = MINECRAFT_VERSION_RE.search(version)
+    if match:
+        return match.group(1)
+    else:
+        return version
 
 @app.route("/statistics/<plugin>/")
 def get_statistics(plugin):
