@@ -21,11 +21,11 @@
                 Records are separated into pages of ten records each.
 
                 {% if prev_page_available %}
-                    [Visit previous page]({{ "?page={}".format(plugin, page - 1) }})
+                    [Visit previous page]({{ "?page={}".format(page - 1) }})
                 {% endif %}
 
                 {% if next_page_available %}
-                    [Visit next page]({{ "?page={}".format(plugin, page + 1) }})
+                    [Visit next page]({{ "?page={}".format(page + 1) }})
                 {% endif %}
             {% endif %}
 
