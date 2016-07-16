@@ -18,15 +18,8 @@
             older than two hours expires and is deleted.
 
             {% if next_page_available or prev_page_available %}
-                Records are separated into pages of ten records each.
-
-                {% if prev_page_available %}
-                    [Visit previous page]({{ "?page={}".format(page - 1) }})
-                {% endif %}
-
-                {% if next_page_available %}
-                    [Visit next page]({{ "?page={}".format(page + 1) }})
-                {% endif %}
+                Page {{ page }}. {% if prev_page_available %} [Visit previous page]({{ "?page={}".format(page - 1) }})
+            {% endif %} {% if next_page_available %} [Visit next page]({{ "?page={}".format(page + 1) }}) {% endif %}
             {% endif %}
 
             {% for record in records %}
