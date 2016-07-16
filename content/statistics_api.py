@@ -136,6 +136,6 @@ def get_statistics(plugin):
     return render_template("display-statistics.html",
                            plugin=plugin,
                            records=record_list,
-                           page_number=page,
+                           page=page,
                            next_page_available=next_page_available,
                            prev_page_available=prev_page_available)
