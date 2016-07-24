@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 import re
+from collections import OrderedDict
 from flask import render_template
 from flask import request
 
@@ -27,6 +28,7 @@ RECORD_PLUGIN_VERSIONS = "statistics:{}:record:{}:versions"
 RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server-version-counts"
 
 MINECRAFT_VERSION_RE = re.compile("\(MC: ([0-9\.]+)\)")
+
 
 @app.route("/statistics/v1/<plugin>/post", methods=["POST"])
 def post_statistics(plugin):
@@ -74,6 +76,7 @@ def parse_server_version(version):
         return match.group(1)
     else:
         return version
+
 
 @app.route("/statistics/<plugin>/")
 def get_statistics(plugin):
@@ -129,8 +132,9 @@ def get_statistics(plugin):
             total_servers += server_count
 
             svc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, record, version)
-            server_version_counts = {key.decode('utf-8'): int(value.decode('utf-8'))
-                                     for key, value in redis.hgetall(svc_key).items()}
+            server_version_counts = OrderedDict(sorted(
+                ((key.decode('utf-8'), int(value.decode('utf-8'))) for key, value in redis.hgetall(svc_key).items()),
+                key=lambda i: i[1], reverse=True))
 
             version_list.append({
                 "version": version,
