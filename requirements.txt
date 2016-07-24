@@ -9,4 +9,3 @@ webassets
 frozen-flask
 apscheduler
 git+https://github.com/dabeaz/ply#egg=ply
-semantic_version

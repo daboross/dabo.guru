@@ -6,7 +6,6 @@ import re
 from collections import OrderedDict
 from flask import render_template
 from flask import request
-from semantic_version import Version
 
 from content import app, redis
 
@@ -134,9 +133,8 @@ def get_statistics(plugin):
 
             svc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, record, version)
             server_version_counts = OrderedDict(sorted(
-                ((Version(key.decode('utf-8'), partial=True), int(value.decode('utf-8')))
-                 for key, value in redis.hgetall(svc_key).items()),
-                key=lambda i: i[0], reverse=True))
+                ((key.decode('utf-8'), int(value.decode('utf-8'))) for key, value in redis.hgetall(svc_key).items()),
+                key=lambda i: i[1], reverse=True))
 
             version_list.append({
                 "version": version,
