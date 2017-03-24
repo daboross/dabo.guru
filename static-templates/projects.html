@@ -1,65 +1,58 @@
 {% extends "sidebar-layout.html" %}
-{% block title %}Dabo - Projects{% endblock %}
+{% block title %}daboross/resources{% endblock %}
 {% block body %}
     <h1 class="title">Projects</h1>
     {% filter markdown %}
-        This is an incomplete list of projects I'm working on.
-        For a full list of open source projects I manage, visit https://github.com/daboross.
-
-        ---
-
-        ### dabo.guru / daboross.net
-        This is the project source code for this website. I learned quite a bit about css and content presentation while
-        creating this.
-
-        - [Github](https://github.com/daboross/dabo.guru)
+        Here are some handpicked open source projects I've worked on in the past. For a full list of my contributions,
+        see https://github.com/daboross.
 
         ---
 
         ### qx.lc
-        Qxlc is a pastebin server + link shortener + image server wrapped into one application. It's written in Python
-        using the Flask web framework, and is basically my first for-function web app written in Flask. I also host the
-        latest version of QXLC at http://qx.lc. Qxlc was created to allow having shortened links, pastes and images all
-        under one short domain.
+        An open source pastebin and short-link server. This was mostly a learning project for me, but it
+        is also continually run at http://qx.lc, so check it out! The server was built in Python, using the Flask web
+        framework.
 
-        - [Running Version](http://qx.lc)
+        - May 2014 - October 2014
         - [GitHub](https://github.com/daboross/qxlc)
 
         ---
 
-        ### SkyWars
-        SkyWars is a minigame designed for Bukkit where players fight to the death on flying islands. It has been one
-        of my main projects in the Bukkit community, and is the most used open source SkyWars Bukkit plugin.
+        ### fern-rs
+        A simple logging backend module for the [`rust`](https://www.rust-lang.org/) language. This allows sending
+        logging messages to multiple log backends as well as filtering each backend based off of message priority.
 
-        - [Documentation](/projects/skywars/)
+        - December 2014 - May 2015
+        - [GitHub](https://github.com/daboross/fern-rs)
+
+        ---
+
+        ### SkyWars
+        A server-side Minecraft Minigame where players fight to the death on floating islands. I built it
+        when I was much more part of the Minecraft community, and I've continued add small updates and maintain it
+        since. It is my most used open source Bukkit plugin, with over 400,000 downloads to date.
+
+        - July 2013 - July 2016
+        - [Documentation](https://dabo.guru/projects/skywars/)
+        - [Statistics](https://dabo.guru/statistics/skywars/)
         - [GitHub](https://github.com/SkyWars/SkyWars)
 
         ---
 
-        ### RemoveGodItems
-        RemoveGodItems is a utility Bukkit plugin which will attempt to remove all overly-godlike (cheated) items from
-        the game. I haven't updated it to the latest version of Minecraft however, so it won't work with custom
-        attributes. It still works with Enchantments though!
+        ### `mc-cli`
+        `mc-cli` is a command line client for Minecraft. It uses an
+        [open source library](https://github.com/Steveice10/MCProtocolLib) for connecting to Minecraft
+        servers and [JLine](https://github.com/jline) for making a nice interface. It allows for 10+ fake clients to
+        connect to the same running server, and is useful for testing plugin features which require many players to
+        be online to function.
 
-        - [GitHub](https://github.com/daboross/RemoveGodItems)
-
-        ---
-
-        ### MavenKickstarter
-        Maven kickstarter is a command line tool which will "kickstart" maven projects. It will create a shell project
-        given a name, artifact id and group id. Author information is currently hardcoded, that does need to be edited
-        before use.
-
-        - [GitHub](https://github.com/daboross/maven-kickstart)
-
-        ---
-
-        ### MinecraftCommandlineInterface
-        Minecraft command-line interface is a Java program which offers a simple command line interface for connecting
-        to Minecraft servers. It connects using a client which just stands where it is teleported, the only real
-        functionality is chat / command execution. You can connect with any number of usernames, in online and offline
-        mode. The JLine interface will be familiar if you've ever run a CraftBukkit or BungeeCord server.
-
+        - September 2013 - September 2014
         - [GitHub](https://github.com/daboross/minecraft-commandline-interface)
+        ---
+
+        ### daboross.net
+        The source code for this website, and all interactive functionality.
+
+        - [Github](https://github.com/daboross/dabo.guru)
     {% endfilter %}
 {% endblock %}
