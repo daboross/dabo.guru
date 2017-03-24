@@ -1,6 +1,10 @@
 import logging
 import time
+from datetime import datetime
 
+import re
+from collections import OrderedDict
+from flask import render_template
 from flask import request
 
 from content import app, redis
@@ -23,9 +27,11 @@ RECORD_PLUGIN_VERSIONS = "statistics:{}:record:{}:versions"
 # (plugin_name, recorded_time, plugin_version): hash(server_version: plugin_count)
 RECORD_SERVER_VERSION_PLUGIN_COUNTS = "statistics:{}:record:{}:version:{}:server-version-counts"
 
+MINECRAFT_VERSION_RE = re.compile("\(MC: ([0-9\.]+)\)")
+
 
 @app.route("/statistics/v1/<plugin>/post", methods=["POST"])
-def statistics_record(plugin):
+def post_statistics(plugin):
     if request.content_length > 512:
         return """Error: too large of a message""", 400
     json = request.get_json()
@@ -43,6 +49,8 @@ def statistics_record(plugin):
         logging.info("Invalid request to skywars statistics: {}", json)
         return """Error: invalid data""", 400
 
+    server_version = parse_server_version(server_version)
+
     plugin = plugin.lower().strip()
 
     pipe = redis.pipeline(transaction=True)
@@ -59,4 +67,90 @@ def statistics_record(plugin):
     pipe.expire(data_key, 2 * 61 * 60)  # one minute after key above expires
 
     pipe.execute()
-    return """Data successfully submitted""", 200
+    return """Data successfully submitted"""
+
+
+def parse_server_version(version):
+    match = MINECRAFT_VERSION_RE.search(version)
+    if match:
+        return match.group(1)
+    else:
+        return version
+
+
+@app.route("/statistics/<plugin>/")
+def get_statistics(plugin):
+    if "page" in request.args:
+        try:
+            page = int(request.args["page"])
+        except ValueError:
+            page = 0
+        else:
+            if page < 0:
+                page = 0
+    else:
+        page = 0
+
+    plugin = plugin.lower().strip()
+
+    if not redis.sismember(PLUGIN_SET, plugin):
+        return """No data gathered for plugin '{}'""".format(plugin)
+
+    first_record = page * 10
+    last_record = first_record + 9
+
+    rl_key = RECORD_LIST.format(plugin)
+    record_name_list = redis.lrange(rl_key, first_record, last_record)
+
+    while not record_name_list:
+        if page <= 0:
+            return """Plugin '{}' known, but no records have yet been generated.""".format(plugin)
+        else:
+            page = page - 1
+            record_name_list = redis.lrange(rl_key, first_record, last_record)
+
+    total_record_count = redis.llen(rl_key)
+
+    prev_page_available = page > 0
+    next_page_available = total_record_count > last_record + 1
+
+    record_list = []
+
+    for index, record in enumerate(record_name_list):
+        record = record.decode('utf-8')
+        record_time = datetime.fromtimestamp(int(record)).strftime("%b %d %Y %H:%M")
+
+        total_players = int(redis.get(RECORD_TOTAL_PLAYERS.format(plugin, record)).decode('utf-8'))
+        total_servers = 0
+        version_list = []
+
+        plugin_version_counts = redis.hgetall(RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, record))
+
+        for version, server_count in sorted(plugin_version_counts.items(), key=lambda i: i[0]):
+            version = version.decode('utf-8')
+            server_count = int(server_count.decode('utf-8'))
+            total_servers += server_count
+
+            svc_key = RECORD_SERVER_VERSION_PLUGIN_COUNTS.format(plugin, record, version)
+            server_version_counts = OrderedDict(sorted(
+                ((key.decode('utf-8'), int(value.decode('utf-8'))) for key, value in redis.hgetall(svc_key).items()),
+                key=lambda i: i[1], reverse=True))
+
+            version_list.append({
+                "version": version,
+                "server_count": server_count,
+                "server_version_counts": server_version_counts,
+            })
+        record_list.append({
+            "date": record_time,
+            "total_servers": total_servers,
+            "total_players": total_players,
+            "plugin_versions": version_list
+        })
+
+    return render_template("display-statistics.html",
+                           plugin=plugin,
+                           records=record_list,
+                           page=page,
+                           next_page_available=next_page_available,
+                           prev_page_available=prev_page_available)

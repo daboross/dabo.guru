@@ -84,7 +84,7 @@ def record_record(plugin):
     data_pipeline = redis.pipeline(transaction=True)
 
     record_list_key = RECORD_LIST.format(plugin)
-    data_pipeline.rpush(record_list_key, current_time)
+    data_pipeline.lpush(record_list_key, current_time)
 
     plugin_version_counts_key = RECORD_PLUGIN_VERSION_PLUGIN_COUNTS.format(plugin, current_time)
     data_pipeline.hmset(plugin_version_counts_key, plugin_version_to_count)
