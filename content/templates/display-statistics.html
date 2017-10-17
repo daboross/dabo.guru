@@ -5,17 +5,15 @@
         {% filter markdown %}
             ### {{ plugin }} statistics
 
-            This is mostly a stand-in interface to view data while the actual one is being built. All data
-            which is permanently stored about the plugin {{ plugin }} is available here, but it isn't in the
-            nicest format.
+            This is a makeshift interface to view statistics data. While a
+            more aesthetically pleasing interface may be built in the future,
+            this is the extent of what is available now.
 
-            This page contains a list of records for {{ plugin }}.
+            The statistics here are stored not as what each individual server
+            sends, but rather as an aggregate of all servers who have checked
+            in the last two hours every hour.
 
-            Records aren't directly the data reported by minecraft servers, but rather an aggregation of
-            all live-reported data received up to two hours before the record.
-
-            Records are made every hour, on the hour, and when each record is made all live-reported data
-            older than two hours expires and is deleted.
+            "Records" are built every hour, and directly before each record is built, live data longer than 2 hours expires and is deleted.
 
             {% if next_page_available or prev_page_available %}
                 Page {{ page }}. {% if prev_page_available %} [Visit previous page.]({{ "?page={}".format(page - 1) }})
