@@ -45,11 +45,7 @@ assets.register('frc-css', 'css/bootstrap.css', 'css/frc.css',
 assets.register('markdown-css', 'css/bootstrap.css', 'css/markdown-sidebar.css',
                 filters='cssmin', output='documentation.css')
 
-# Shared javascript
-assets.register('analytics-js', 'js/analytics.js',
-                filters='rjsmin', output='analytics.js')
-
-assets.register('shared-js', 'js/analytics.js', 'js/jquery.js',
+assets.register('shared-js', 'js/jquery.js',
                 filters='rjsmin', output='shared.js')
 
 # Individual page javascript
