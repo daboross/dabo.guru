@@ -36,7 +36,7 @@ assets.manifest = "file:{}".format(os.path.abspath(os.path.join("static", ".weba
 assets.register('bootstrap-css', 'css/bootstrap.css',
                 filters='cssmin', output='bootstrap.css')
 
-assets.register('sidebar-css', 'css/bootstrap.css', 'css/shared-sidebar.css',
+assets.register('sidebar-css', 'css/shared-sidebar.css', 'css/bootstrap.css',
                 filters='cssmin', output='shared.css')
 
 assets.register('frc-css', 'css/bootstrap.css', 'css/frc.css',
