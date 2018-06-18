@@ -1,0 +1,25 @@
+[package]
+name = "v2"
+version = "0.1.0"
+authors = ["David Ross <daboross@daboross.net>"]
+
+[dependencies]
+failure = "0.1"
+log = "0.4"
+fern = "0.5"
+redis-async = "0.3"
+futures = "0.1"
+tokio = "0.1"
+tokio-timer = "0.2"
+qutex = "0.2"
+backoff = "0.1.2"
+void = "1"
+
+[dependencies.actix-web]
+version = "0.7.0-dev"
+git = "https://github.com/actix/actix-web.git"
+default-features = false
+features = ["flate2-c", "brotli"]
+
+[dependencies.actix]
+git = "https://github.com/actix/actix.git"
