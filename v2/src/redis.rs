@@ -1,19 +1,30 @@
+//! Wraps `redis_async` in a actix actor wrapper.
+//!
+//! Mostly just takes advantage of the actix actor system, but also adds support for transactions!
 use std::net;
 use std::time::Duration;
 
 use actix::prelude::*;
 use actix::AsyncContext;
 use backoff::{backoff::Backoff, ExponentialBackoff};
-use futures::{future, Future};
-use redis_async::{client::{paired_connect, PairedConnection},
-                  resp::{FromResp, RespValue}};
+use futures::{future, sync::oneshot, Future};
+use redis_async::{
+    client::{paired_connect, PairedConnection}, resp::{FromResp, RespValue},
+};
 use std::marker::PhantomData;
 use tokio::executor;
 use void::Void;
-use {failure, tokio_timer};
+use {failure, tokio, tokio_timer};
 
 pub fn message<R: FromResp>(msg: RespValue) -> RedisMessage<R> {
     RedisMessage(msg, PhantomData)
+}
+
+pub fn transaction<I>(messages: I) -> RedisTransaction
+where
+    I: IntoIterator<Item = RespValue>,
+{
+    RedisTransaction(messages.into_iter().collect())
 }
 
 #[derive(Debug, Clone)]
@@ -26,6 +37,21 @@ where
     R: FromResp + Send + 'static,
 {
     type Result = Result<R, failure::Error>;
+}
+
+pub struct RedisTransaction(Vec<RespValue>);
+
+impl Message for RedisTransaction {
+    type Result = Result<Vec<RespValue>, failure::Error>;
+}
+
+struct TransactionWithSendBuilt {
+    msgs: Vec<RespValue>,
+    send: oneshot::Sender<Result<Vec<RespValue>, failure::Error>>,
+}
+
+impl Message for TransactionWithSendBuilt {
+    type Result = ();
 }
 
 pub struct RedisActor {
@@ -171,6 +197,106 @@ where
             });
 
             Box::new(fut) as ResponseFuture<_, _>
+        }
+    }
+}
+
+impl Handler<RedisTransaction> for RedisActor {
+    type Result = ResponseFuture<Vec<RespValue>, failure::Error>;
+
+    fn handle(
+        &mut self,
+        RedisTransaction(msgs): RedisTransaction,
+        ctx: &mut Context<Self>,
+    ) -> Self::Result {
+        let (send, recv) = oneshot::channel();
+        let fut = ctx.address()
+            .send(TransactionWithSendBuilt { msgs, send })
+            .then(|res| recv)
+            .then(|res| match res {
+                Ok(r) => r,
+                Err(e) => Err(e.into()),
+            });
+        Box::new(fut) as ResponseFuture<_, _>
+    }
+}
+
+impl Handler<TransactionWithSendBuilt> for RedisActor {
+    type Result = ();
+
+    fn handle(&mut self, msg: TransactionWithSendBuilt, ctx: &mut Context<Self>) {
+        use redis_async::error::Error;
+
+        let TransactionWithSendBuilt { msgs, send } = msg;
+
+        fn resend_self(
+            address: Addr<RedisActor>,
+            msgs: Vec<RespValue>,
+            send: oneshot::Sender<Result<Vec<RespValue>, failure::Error>>,
+        ) {
+            // send_res will only fail if this actor is stopped, at which point we don't care.
+            tokio::executor::spawn(
+                address
+                    .send(TransactionWithSendBuilt { send, msgs })
+                    .then(|_send_res| Ok(())),
+            );
+        }
+
+        if self.reconnecting {
+            resend_self(ctx.address(), msgs, send);
+        } else {
+            let addr = ctx.address();
+            let conn = self.conn.clone();
+            // Clone is necessary so we can re-send the message if the connection is closed.
+            let msgs_clone = msgs.clone();
+            // Polling order of redis_async sends doesn't matter- they are all queued the instant
+            // we ask them to. `join_all` iterates through the entire iterator when called as well,
+            // so we know all the commands will be in the right order! Then we want to join on all
+            // of them at the same time so that redis is free to pipeline if it wants to.
+            let fut = self.conn
+                .send(resp_array!("MULTI"))
+                .join3(
+                    future::join_all(msgs_clone.into_iter().map(move |v| {
+                        conn.send(v).and_then(|s: String| {
+                            if s == "QUEUED" {
+                                Ok(())
+                            } else {
+                                Err(Error::Internal(format!(
+                                    "expected sending after MULTI to \
+                                     return QUEUED, but got \"{:?}\"",
+                                    s
+                                )))
+                            }
+                        })
+                    })),
+                    self.conn.send(resp_array!("EXEC")),
+                )
+                .then(|res: Result<((), Vec<()>, Vec<RespValue>), _>| match res {
+                    Err(Error::EndOfStream) => {
+                        future::Either::A(addr.send(DoReconnect).then(|res| {
+                            match res {
+                                Ok(v) => {
+                                    resend_self(addr, msgs, send);
+                                }
+                                Err(e) => {
+                                    let _ = send.send(Err(e.into()));
+                                }
+                            };
+                            future::ok(())
+                        }))
+                    }
+                    Ok(((), _queue_results, actual_result)) => {
+                        // we don't really care if they've dropped the receiver.
+                        let _ = send.send(Ok(actual_result));
+                        future::Either::B(future::ok(()))
+                    }
+                    Err(other) => {
+                        let _ = send.send(Err(other.into()));
+                        future::Either::B(future::ok(()))
+                    }
+                });
+
+            actix::AsyncContext::wait(ctx, actix::fut::wrap_future(fut));
         }
     }
 }

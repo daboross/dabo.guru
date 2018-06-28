@@ -36,7 +36,7 @@ def post_statistics(plugin):
         return """Error: too large of a message""", 400
     json = request.get_json()
     if json is None:
-        logging.info("Non-json data sent to plugin/skywars/post: {}", request.get_data().decode())
+        logging.info("Non-json data sent to plugin/{}/post: {}", plugin, request.get_data().decode())
         return """Error: invalid data""", 400
 
     guid = json.get("instance_uuid")

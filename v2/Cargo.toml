@@ -4,22 +4,35 @@ version = "0.1.0"
 authors = ["David Ross <daboross@daboross.net>"]
 
 [dependencies]
+backoff = "0.1"
+dotenv = "0.13"
 failure = "0.1"
-log = "0.4"
+failure_derive = "0.1"
 fern = "0.5"
-redis-async = "0.3"
 futures = "0.1"
+log = "0.4"
+pb-async = "0.1"
+qutex = "0.2"
+redis-async = "0.3"
+regex = "1"
+serde = "1"
+serde_derive = "1"
 tokio = "0.1"
 tokio-timer = "0.2"
-qutex = "0.2"
-backoff = "0.1.2"
 void = "1"
+lazy_static = "1"
+http = "0.1"
 
 [dependencies.actix-web]
 version = "0.7.0-dev"
 git = "https://github.com/actix/actix-web.git"
 default-features = false
-features = ["flate2-c", "brotli"]
+# we need to be able to accept requests from old versions of SkyWars
+# for the statistics API which abuse/misuse Content-Encoding. They send
+# requests with Content-Encoding: gzip without actually compressing the
+# content! This is only accepted by actix-web servers when the server
+# has no support for gzip at all.
+#features = ["flate2-c", "brotli"]
 
 [dependencies.actix]
 git = "https://github.com/actix/actix.git"
