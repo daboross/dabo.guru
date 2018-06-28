@@ -233,26 +233,24 @@ impl Handler<TransactionWithSendBuilt> for RedisActor {
             address: Addr<RedisActor>,
             msgs: Vec<RespValue>,
             send: oneshot::Sender<Result<Vec<RespValue>, failure::Error>>,
-        ) {
+        ) -> impl Future<Item = (), Error = ()> {
             // send_res will only fail if this actor is stopped, at which point we don't care.
-            tokio::executor::spawn(
-                address
-                    .send(TransactionWithSendBuilt { send, msgs })
-                    .then(|_send_res| Ok(())),
-            );
+            address
+                .send(TransactionWithSendBuilt { send, msgs })
+                .then(|_send_res| Ok(()))
         }
 
         if self.reconnecting {
-            resend_self(ctx.address(), msgs, send);
+            let addr = ctx.address();
+            ctx.spawn(actix::fut::wrap_future(resend_self(addr, msgs, send)));
         } else {
             let addr = ctx.address();
             let conn = self.conn.clone();
             // Clone is necessary so we can re-send the message if the connection is closed.
             let msgs_clone = msgs.clone();
             // Polling order of redis_async sends doesn't matter- they are all queued the instant
-            // we ask them to. `join_all` iterates through the entire iterator when called as well,
-            // so we know all the commands will be in the right order! Then we want to join on all
-            // of them at the same time so that redis is free to pipeline if it wants to.
+            // we ask them to. `join_all` iterates through the entire iterator immediately when
+            // called so those will all be sent correctly before EXEC.
             let fut = self.conn
                 .send(resp_array!("MULTI"))
                 .join3(
@@ -271,29 +269,25 @@ impl Handler<TransactionWithSendBuilt> for RedisActor {
                     })),
                     self.conn.send(resp_array!("EXEC")),
                 )
-                .then(|res: Result<((), Vec<()>, Vec<RespValue>), _>| match res {
-                    Err(Error::EndOfStream) => {
-                        future::Either::A(addr.send(DoReconnect).then(|res| {
-                            match res {
-                                Ok(v) => {
-                                    resend_self(addr, msgs, send);
-                                }
+                .then(|res: Result<((), _, Vec<RespValue>), _>| {
+                    match res {
+                        Err(Error::EndOfStream) => {
+                            tokio::executor::spawn(addr.send(DoReconnect).then(|res| match res {
+                                Ok(v) => future::Either::A(resend_self(addr, msgs, send)),
                                 Err(e) => {
                                     let _ = send.send(Err(e.into()));
+                                    future::Either::B(future::ok(()))
                                 }
-                            };
-                            future::ok(())
-                        }))
+                            }));
+                        }
+                        Ok(((), _queue_results, actual_result)) => {
+                            let _ = send.send(Ok(actual_result));
+                        }
+                        Err(other) => {
+                            let _ = send.send(Err(other.into()));
+                        }
                     }
-                    Ok(((), _queue_results, actual_result)) => {
-                        // we don't really care if they've dropped the receiver.
-                        let _ = send.send(Ok(actual_result));
-                        future::Either::B(future::ok(()))
-                    }
-                    Err(other) => {
-                        let _ = send.send(Err(other.into()));
-                        future::Either::B(future::ok(()))
-                    }
+                    future::ok(())
                 });
 
             actix::AsyncContext::wait(ctx, actix::fut::wrap_future(fut));
