@@ -1,99 +1,140 @@
 {% extends "sidebar-layout.html" %}
-{% block title %}db/resources{% endblock %}
+{% block title %}David Ross - Projects{% endblock %}
 {% block body %}
     <h1 class="title">Projects</h1>
     {% filter markdown %}
-        Here are some handpicked open source projects I've worked on. For a full list, see https://github.com/daboross.
+        Handpicked open source projects I've worked on.
+        For a full list, see https://github.com/daboross.
 
-        ### screeps-rs
+        For reference, I've built projects related to the following games:
 
-        Alternative game client to the official Screeps client. Screeps is an online RTS-MMO where users upload JavaScript programs to control online empires.
+        - [Screeps](https://screeps.com/) is an online open-world game. All players upload AI to control their own empires, and the code on-server is run 24/7.
+        - [Minecraft](https://www.minecraft.net/) is a popular first-person exploration / building game
 
-        `screeps-rs` attempts to be an alternative to the official client. While the official client is run in the
-        browser, `screeps-rs` runs natively. It does not attempt to be fully-featured, but rather a minimal alternative
-        for those wanting a lighter client.
+        ### rustyscreeps org - cargo-screeps, screeps-game-api
 
-        - March 2017 - present
-        - [GitHub](https://github.com/daboross/screeps-rs)
+        Timeline: 2017 - today
 
-        ---
+        Language: Rust
+
+        [cargo-screeps](https://github.com/rustyscreeps/cargo-screeps/) is a tool for compiling and uploading Rust AIs to Screeps servers. It supports both private servers, and the official server.
+
+        [screeps-game-api](https://github.com/rustyscreeps/cargo-screeps/) contains API bindings to Screeps' unit control API for use by Rust programs compiling to web assembly.
+
+        Together, these projects allow writing Screeps AIs in Rust. I wrote most of the initial code, and worked half-and-ahlf with co-contributors finishing up the rest of the API.
+
+        ### screeps-api
+
+        Timeline: 2017 - 2019
+
+        Langauge: Rust
+
+        [rust-screeps-api](https://github.com/daboross/rust-screeps-api) contains bindings to Screep's REST web API. The biggest advantage over raw HTTPS calls is that all messages are typechecked, and all responses automatically parsed into structs.
+
+        This allows you to work with the screeps web API as if it were just another Rust library, with full IDE auto-complete support and compile-time typechecking.
+
+        ### scrs
+
+        Timeline: 2017 - 2018
+
+        [scrs](https://github.com/daboross/screeps-rs) is a full alternative Screeps client which can watch live map data.
+        When written, it supported both the official server, and private servers (the official server has since changed protocol,
+        and is no longer supported).
+
+        The biggest advantage is that this runs as a small desktop GUI application, and consumes much less power than the
+        official client. The disadvantage is that neither code-editing nor unit-level-detail viewing are supported.
+
+        ### srv
+
+        Timeline: 2019
+
+        [srv](https://github.com/daboross/srv) is a full alternative Screeps client, the spiritual successor to scrs. Supports both private and official servers.
+
+        While scrs was a desktop application, srv is written as a terminal user-interface. It implements all detailed viewing
+        functionality present in the official client for only a fraction of the computing power. The other big advantage is
+        getting those sweet ASCII graphics.
 
         ### fern
 
-        Simple, efficient logging for the [`rust`](https://www.rust-lang.org/) language. Lets users configure logging through branches/sub-loggers, up to an infinite depth. Each level can perform formatting, or filter through message priority or other arbitrary criteria.
+        Timeline: 2014 - effectively, 2019
 
-        - December 2014 - present
-        - [GitHub](https://github.com/daboross/fern-rs)
+        Language: Rust
+
+        [fern](https://github.com/daboross/fern) is a logging library backend favoring runtime configurability and fast logging-path execution. Notably, it can run full formatting and filtering with zero allocations on the logging path.
+
+        The biggest sell is the simple configuration, all in Rust code, and how simple it is to change based on command-line parameters or other arbitrary data. The biggest downside, compared to projects like [log4rs](https://github.com/sfackler/log4rs), is that that configuration still all has to be written in Rust code.
 
         ---
+
+        ## Older Projects
 
         ### qx.lc
-        An open source pastebin and short-link server. Mostly a learning
-         project for python web servers, but also continuously runs at
-        http://qx.lc. Built in Python with the flask web framework.
 
-        - May 2014 - October 2014
-        - [GitHub](https://github.com/daboross/qxlc)
+        Timeline: 2014
 
-        ---
+        Language: Python
 
-        Projects in the further past:
+        [qxlc](https://github.com/daboross/qxlc) is a pastebin and link-shortening server. Shares the same URL scheme `qx.lc/xxxx` for both features.
+
+        This was written mostly as a learning experience. I built it using the [Flask](https://palletsprojects.com/p/flask/) web framework.
 
         ---
 
         ### SkyWars
 
-        A server-side Minecraft Minigame where players fight to the death on
-        floating islands. It was built when I was much more part of the
-        Minecraft community, and I've been able to partially maintain it
-        since. It is my most used Minecraft plugin, with over 400,000 downloads
-        to date.
+        Timeline: 2013 - 2016
 
-        - July 2013 - July 2016
-        - [Documentation](https://dabo.guru/projects/skywars/)
-        - [Statistics](https://dabo.guru/statistics/skywars/)
-        - [GitHub](https://github.com/SkyWars/SkyWars)
+        Language: Java
 
-        ---
-
-        ### `mc-cli`
-
-        `mc-cli` is a command line client for Minecraft. It uses an
-        [open source library](https://github.com/Steveice10/MCProtocolLib)
-        for connecting to Minecraft servers and
-        [JLine](https://github.com/jline) for making a nice interface. It
-        allows for 10+ fake clients to connect to the same running server,
-        and is useful for testing plugin features which require many players
-        to be online to function.
-
-        - September 2013 - September 2014
-        - [GitHub](https://github.com/daboross/minecraft-commandline-interface)
-
-        ---
-
-        ### MCScript
-
-        This is a bash script compiled for managing a local minecraft server on
-        a linux server of VPS. It can handle backups, restarting the server
-        regularly, keeping it running in the background and updating plugins
-        with the right configuration.
-
-        It mostly "just works" - not many changes are needed after initial creation.
-
-        - November 2013 - January 2014
-        - [GitHub](https://github.com/daboross/MCScript)
+        [SkyWars](https://github.com/SkyWars/SkyWars) is a Minecraft server plugin for managing ``SkyWars'' games. It queues players, creates arenas and overall manages players playing in competitions.
 
         ---
 
         ### FRC Team
 
-        I was a programmer for the FRC team 4030 from 2012-2015. Source code for
-        the robot programs I worked on are available at:
+        I was a programmer for the FRC team 4030 from 2012-2015. Notable contrbutions include:
+        - writing the manual control code each year, translating joysticks into movement
+        - writing autonomous code, where the robot will perform actions on its own
+        - co-developing an independent control panel which networks with the robot, retrieves status information, and updates configurations.
+
+        For background, FRC is a high school robotics competition. On one day in January, a theme and ruleset is released to teams across the world. Teams then have six weeks to build, test, and program the robot. On the sixth week, we box up the robot, and only unbox it for competitions.
 
         - https://github.com/FIRST-4030/2013
         - https://github.com/FIRST-4030/2014
         - https://github.com/FIRST-4030/FRC-2015
         - https://github.com/FIRST-4030/RobotTables
+
+        ---
+
+        ### mc-cli
+
+        Timeline: 2013 - 2014
+
+        Language: Java
+
+        [mc-cli](https://github.com/daboross/minecraft-commandline-interface) is a command line
+        client for Minecraft. Uses [MCProtocolLib](https://github.com/Steveice10/MCProtocolLib)
+        for connecting to Minecraft servers and [JLine](https://github.com/jline) for the
+        interface. Lets you run 10+ fake clients connecting to the same Minecraft server.
+
+        This is extremely useful for testing multiplayer plugin features when developing server-side plugins.
+
+
+        ---
+
+        ### MCScript
+
+        Timeline: 2013 - 2014
+
+        Language: Bash
+
+        [MCScript](https://github.com/daboross/MCScript) is a bash script compiled for managing
+        a local minecraft server on a linux. It handles backups, restarts the server regularly,
+        ensures it stays running in the background and updates plugins.
+
+        This is an alternative to web-based control panels, or just running the server manually. The
+        main advantage is that MCScript "just works" after initial configuration.
+
 
     {% endfilter %}
 {% endblock %}
