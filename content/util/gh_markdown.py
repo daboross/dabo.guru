@@ -55,8 +55,12 @@ def markdown_filter(s):
     # html, not spaces used for marking code sections for instance.
     text_lines = (line[leading_spaces:] for line in text_lines)
 
+    br_processed = (line[:-len('<br/>')] + '  '
+                    if line.endswith('<br/>')
+                    else line for line in text_lines)
+
     # reconstruct text
-    text = '\n'.join(text_lines)
+    text = '\n'.join(br_processed)
 
     return Markup(markdown(text))
 

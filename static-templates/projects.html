@@ -4,17 +4,16 @@
     <h1 class="title">Projects</h1>
     {% filter markdown %}
         Handpicked open source projects I've worked on.
-        For a full list, see https://github.com/daboross.
+        For a full list, see [my github repositories](https://github.com/daboross?tab=repositories&type=source).
 
         For reference, I've built projects related to the following games:
 
         - [Screeps](https://screeps.com/) is an online open-world game. All players upload AI to control their own empires, and the code on-server is run 24/7.
         - [Minecraft](https://www.minecraft.net/) is a popular first-person exploration / building game
 
-        ### rustyscreeps org - cargo-screeps, screeps-game-api
+        ### cargo-screeps, screeps-game-api
 
-        Timeline: 2017 - today
-
+        Timeline: 2017 - today<br/>
         Language: Rust
 
         [cargo-screeps](https://github.com/rustyscreeps/cargo-screeps/) is a tool for compiling and uploading Rust AIs to Screeps servers. It supports both private servers, and the official server.
@@ -25,28 +24,33 @@
 
         ### screeps-api
 
-        Timeline: 2017 - 2019
-
+        Timeline: 2017 - 2019<br/>
         Langauge: Rust
 
-        [rust-screeps-api](https://github.com/daboross/rust-screeps-api) contains bindings to Screep's REST web API. The biggest advantage over raw HTTPS calls is that all messages are typechecked, and all responses automatically parsed into structs.
+        [rust-screeps-api](https://github.com/daboross/rust-screeps-api) contains bindings
+        to Screep's REST web API. The advantage over raw HTTPS calls is that all messages are
+        typechecked, and all responses automatically parsed into structs.
 
-        This allows you to work with the screeps web API as if it were just another Rust library, with full IDE auto-complete support and compile-time typechecking.
+        This allows you to work with the screeps web API as if it were just another Rust library,
+        with full IDE auto-complete support and compile-time typechecking.
 
         ### scrs
 
-        Timeline: 2017 - 2018
+        Timeline: 2017 - 2018<br/>
+        Langauge: Rust
 
         [scrs](https://github.com/daboross/screeps-rs) is a full alternative Screeps client which can watch live map data.
         When written, it supported both the official server, and private servers (the official server has since changed protocol,
         and is no longer supported).
 
-        The biggest advantage is that this runs as a small desktop GUI application, and consumes much less power than the
-        official client. The disadvantage is that neither code-editing nor unit-level-detail viewing are supported.
+        scrs's advantage is that it runs as a small desktop GUI application, and consumes much
+        less power than the official client. The disadvantage is that neither code-editing nor
+        unit-level-detail viewing are supported.
 
         ### srv
 
-        Timeline: 2019
+        Timeline: 2019<br/>
+        Langauge: Rust
 
         [srv](https://github.com/daboross/srv) is a full alternative Screeps client, the spiritual successor to scrs. Supports both private and official servers.
 
@@ -56,13 +60,15 @@
 
         ### fern
 
-        Timeline: 2014 - effectively, 2019
-
+        Timeline: 2014 - effectively, 2019<br/>
         Language: Rust
 
         [fern](https://github.com/daboross/fern) is a logging library backend favoring runtime configurability and fast logging-path execution. Notably, it can run full formatting and filtering with zero allocations on the logging path.
 
-        The biggest sell is the simple configuration, all in Rust code, and how simple it is to change based on command-line parameters or other arbitrary data. The biggest downside, compared to projects like [log4rs](https://github.com/sfackler/log4rs), is that that configuration still all has to be written in Rust code.
+        The sell is simple configuration. Since it's all Rust code, changing logging based on
+        command line parameters or config files is easy. The biggest downside, compared to projects
+        like [log4rs](https://github.com/sfackler/log4rs), is that that configuration still all has
+        to be written in Rust code.
 
         ---
 
@@ -70,34 +76,41 @@
 
         ### qx.lc
 
-        Timeline: 2014
-
+        Timeline: 2014<br/>
         Language: Python
 
-        [qxlc](https://github.com/daboross/qxlc) is a pastebin and link-shortening server. Shares the same URL scheme `qx.lc/xxxx` for both features.
+        [qxlc](https://github.com/daboross/qxlc) is a pastebin and link-shortening server.
 
-        This was written mostly as a learning experience. I built it using the [Flask](https://palletsprojects.com/p/flask/) web framework.
+        I wrote this as a learning experience for using the
+        [Flask](https://palletsprojects.com/p/flask/) web framework.
 
         ---
 
         ### SkyWars
 
-        Timeline: 2013 - 2016
-
+        Timeline: 2013 - 2016<br/>
         Language: Java
 
-        [SkyWars](https://github.com/SkyWars/SkyWars) is a Minecraft server plugin for managing ``SkyWars'' games. It queues players, creates arenas and overall manages players playing in competitions.
+        [SkyWars](https://github.com/SkyWars/SkyWars) is a Minecraft server plugin for managing
+        ``SkyWars'' games. It queues players, creates arenas and overall manages players playing
+        in competitions.
 
         ---
 
         ### FRC Team
+
+        Timeline: 2012 - 2015<br/>
+        Language: Java
 
         I was a programmer for the FRC team 4030 from 2012-2015. Notable contrbutions include:
         - writing the manual control code each year, translating joysticks into movement
         - writing autonomous code, where the robot will perform actions on its own
         - co-developing an independent control panel which networks with the robot, retrieves status information, and updates configurations.
 
-        For background, FRC is a high school robotics competition. On one day in January, a theme and ruleset is released to teams across the world. Teams then have six weeks to build, test, and program the robot. On the sixth week, we box up the robot, and only unbox it for competitions.
+        For background, FRC is a high school robotics competition. On one day in January, a theme
+        and ruleset is released to teams across the world. Teams then have six weeks to build,
+        test, and program the robot. On the sixth week, we box up the robot, and only unbox it for
+        competitions.
 
         - https://github.com/FIRST-4030/2013
         - https://github.com/FIRST-4030/2014
@@ -108,8 +121,7 @@
 
         ### mc-cli
 
-        Timeline: 2013 - 2014
-
+        Timeline: 2013 - 2014<br/>
         Language: Java
 
         [mc-cli](https://github.com/daboross/minecraft-commandline-interface) is a command line
@@ -124,8 +136,7 @@
 
         ### MCScript
 
-        Timeline: 2013 - 2014
-
+        Timeline: 2013 - 2014<br/>
         Language: Bash
 
         [MCScript](https://github.com/daboross/MCScript) is a bash script compiled for managing
