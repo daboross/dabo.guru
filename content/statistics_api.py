@@ -70,6 +70,7 @@ def post_statistics(plugin):
     return """Data successfully submitted"""
 
 
+
 def parse_server_version(version):
     match = MINECRAFT_VERSION_RE.search(version)
     if match:
